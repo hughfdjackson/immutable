@@ -1,6 +1,6 @@
 # Persistent
 
-Persistentant data-structures from the comfort of JavaScript - a lá clojure.
+Persistent data-structures from the comfort of JavaScript - a lá clojure.
 
 ## Why?
 
