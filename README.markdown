@@ -51,7 +51,7 @@ changed.get('y') //= 4
 
 Gets an attribute.
 
-``` 
+```javascript
 var o = p.dict({ x: 3, y: 4 })
 
 o.get('x') //= 3
@@ -61,7 +61,7 @@ o.get('x') //= 3
 
 Returns true or false; same as `key in object` for regular objects:
 
-```
+```javascript
 var o = p.dict({ x: 3, y: 4 })
 
 o.has('x') //= true
@@ -72,7 +72,7 @@ o.has('z') //= false
 
 Returns a new `dict` with the key removed.
 
-```
+```javascript
 var o = p.dict({
     foo: 'bar',
     baz: 'quux'
@@ -87,7 +87,7 @@ o.has('foo')       //= true
 
 Returns a seperate, mutable object with the same attrs.
 
-```
+```javascript
 var o = p.dict({
     foo: 'bar',
     baz: 'quux'
@@ -98,3 +98,52 @@ delete trans.foo
 
 o.has('foo') //= true
 ```
+
+## persistent.array(Array) -> array
+
+Shares the same API as `persistent.dict`, except:
+
+### persistent.transient() -> array
+
+Returns a seperate, mutable array with the same attrs.
+
+```javascript
+var arr1 = p.array([1, 2, 3]),
+    arr2 = arr1.transient()
+    
+arr2.splice(1)
+
+arr1[1] !== arr2[1] //= true
+```
+
+### Native Methods
+
+The following native methods return a new instance of p.array:
+                    
+* map
+* sort
+* filter
+* splice
+* slice
+* reverse
+* concat
+
+The following native methods work as expected for a regular array:
+
+* toString
+* toLocaleString
+* join
+* forEach
+* indexOf
+* lastIndexOf
+* every
+* some
+* reduce 
+* reduceRight
+
+The following silently fail, since they're normally mutating:
+
+* pop
+* push
+* shift
+* unshift

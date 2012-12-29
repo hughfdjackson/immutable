@@ -75,3 +75,58 @@ test('dict.transient returns a new mutable object with the same attrs', function
     a.ok(!('foo' in t))
     a.ok(o.has('foo'))
 })
+
+
+suite('p.array')
+
+test('takes p.dict\'s methods', function(){
+
+})
+
+test('array.transient returns array with *all* props copied', function(){
+    var arr = p.array({ x: 3, 0: 1, 2: 3 }).transient()
+
+    a.equal(arr[0], 1)
+    a.equal(arr[2], 3)
+    a.equal(arr.length, 3)
+
+    a.equal(arr.x, 3)
+    a.ok(Array.isArray(arr))
+})
+
+test('wraps all native methods', function(){
+    var assertNotSameAsPrototype = function(name){ a.notEqual(p.array.prototype[name], Array.prototype[name]) }
+
+    ;["toString", "toLocaleString", "join", "pop", "push", "concat", "reverse", "shift", "unshift", "slice", 
+     "splice", "sort", "filter", "forEach", "some", "every", "map", "indexOf", "lastIndexOf", "reduce", "reduceRight"].forEach(assertNotSameAsPrototype)
+})
+
+
+test('.filter - an object returning wrapped method - rewraps in p.array', function(){
+    var arr = p.array([1, 2, 3]),
+        odd = function(n){ return n % 2 !== 0 },
+        res = arr.filter(odd)
+    
+    a.ok(res instanceof p.array)
+
+    a.ok(arr.get(1), 2)
+    a.ok(res.get(1), undefined)
+})
+
+test('.every - a non-object returning wrapped method', function(){
+    var arr = p.array([1, 2, 3]),
+        odd = function(n){ return n % 2 !== 0 }
+
+    a.equal(arr.every(odd), false)
+    a.equal(arr.some(odd), true)
+})
+
+test('.reduce and .reduceRight return the same type', function(){
+    var arr = p.array([1, 2, 3])
+    
+    var res = arr.reduce(function(arr, i) { arr.push(i + 1); return arr }, [])
+    a.ok(!(res instanceof p.array))
+
+    res = arr.reduceRight(function(arr, i) { arr.push(i + 1); return arr }, [])
+    a.ok(!(res instanceof p.array))
+})
