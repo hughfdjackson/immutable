@@ -1,3 +1,5 @@
+**Warning: API Unstable (even more so than most < 1.0.0 releases**
+
 # Persistent
 
 Persistent data-structures from the comfort of JavaScript - a lá clojure.
