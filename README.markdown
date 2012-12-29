@@ -10,7 +10,7 @@ Mutability causes headaches; immutability soothes them.  JavaScript's Object and
 
 ```javascript
 var p = require('persist'),
-    person = p.map({ firstName: 'hugh', secondName: 'jackson' })
+    person = p.dict({ firstName: 'hugh', secondName: 'jackson' })
     
 var personWithAge = person.set({ age: 24 })
 
@@ -23,23 +23,23 @@ personWithAge.get('age')   //= true
 
 `npm install persist` 
 
-## persist.map([Object]) -> map
+## persist.dict([Object]) -> dict
 
-Creates an empty map, or sets the attributes if an object is passed.
+Creates an empty dict, or sets the attributes if an object is passed.
 
 ```javascript
-var o = p.map()
+var o = p.dict()
 
 // or
-var you = p.map({ wise: true, willUseThisLib: true })
+var you = p.dict({ wise: true, willUseThisLib: true })
 ```
 
-### .set(String, Value) OR .set(Object) -> map
+### .set(String, Value) OR .set(Object) -> dict
 
-Returns a new map with the additional attribute(s).
+Returns a new dict with the additional attribute(s).
 
 ```javascript
-var o = p.map()
+var o = p.dict()
 
 var changed = o.set('x', 3).set({ y: 4, z: 5 })
 
@@ -52,7 +52,7 @@ changed.get('y') //= 4
 Gets an attribute.
 
 ``` 
-var o = p.map({ x: 3, y: 4 })
+var o = p.dict({ x: 3, y: 4 })
 
 o.get('x') //= 3
 ```
@@ -62,18 +62,18 @@ o.get('x') //= 3
 Returns true or false; same as `key in object` for regular objects:
 
 ```
-var o = p.map({ x: 3, y: 4 })
+var o = p.dict({ x: 3, y: 4 })
 
 o.has('x') //= true
 o.has('z') //= false
 ```
 
-### .remove(String) `alias: .delete(String)` -> map
+### .remove(String) `alias: .delete(String)` -> dict
 
-Returns a new `map` with the key removed.
+Returns a new `dict` with the key removed.
 
 ```
-var o = p.map({
+var o = p.dict({
     foo: 'bar',
     baz: 'quux'
 })
@@ -81,4 +81,20 @@ var o = p.map({
 var updated = o.remove('foo').remove('baz')
 updated.has('foo') //= false
 o.has('foo')       //= true
+```
+
+### .transient() 
+
+Returns a seperate, mutable object with the same attrs.
+
+```
+var o = p.dict({
+    foo: 'bar',
+    baz: 'quux'
+})
+
+var trans = o.transient()
+delete trans.foo
+
+o.has('foo') //= true
 ```

@@ -1,24 +1,24 @@
 var a = require('assert'),
     p = require('..')
 
-suite('p.map')
+suite('p.dict')
 
-test('map()', function(){
-    var o = p.map()
+test('dict()', function(){
+    var o = p.dict()
     a.ok(o)
 })
 
-test('map(Object)', function(){
+test('dict(Object)', function(){
     var opts = { x: 1, y: 2 },
-        o = p.map(opts)
+        o = p.dict(opts)
 
     a.ok(o.has('x'))
     delete opts.x
     a.ok(o.has('x'))
 })
 
-test('map.set', function(){
-    var o1 = p.map({ x: 3 }),
+test('dict.set', function(){
+    var o1 = p.dict({ x: 3 }),
         o2 = o1.set('y', 3).set({ z: 3 })
 
     a.ok(o1.has('x'))
@@ -30,35 +30,48 @@ test('map.set', function(){
     a.ok(o2.has('z'))
 })
 
-test('map.get', function(){
-    var o = p.map({ x: 3 })
+test('dict.get', function(){
+    var o = p.dict({ x: 3 })
 
     a.equal(o.get('x'), 3)
     a.equal(o.get('y'), undefined)
 })
 
-test('map.has', function(){
-    var o = p.map({ x: 3 })
+test('dict.has', function(){
+    var o = p.dict({ x: 3 })
 
     a.ok(o.has('x'))
     a.ok(!o.has('y'))
 })
-test('map.remove', function(){
-    var o1 = p.map({ x: 3 }),
+
+test('dict.remove', function(){
+    var o1 = p.dict({ x: 3 }),
         o2 = o1.remove('x')
 
     a.ok(o1.has('x'))
     a.ok(!o2.has('x'))
 })
 
-test('map.delete alias for map.remove', function(){
-    var o = p.map()
+
+test('dict.delete alias for dict.remove', function(){
+    var o = p.dict()
 
     a.equal(o.delete, o.remove)
 })
 
-test('p.map is a new-less constructor', function(){
-    var o = p.map()
+test('p.dict is a new-less constructor', function(){
+    var o = p.dict()
 
-    a.ok(o instanceof p.map)
+    a.ok(o instanceof p.dict)
+})
+
+
+test('dict.transient returns a new mutable object with the same attrs', function(){
+    var o = p.dict({ foo: 'bar' }),
+        t = o.transient()
+
+    a.ok('foo' in t)
+    delete t.foo
+    a.ok(!('foo' in t))
+    a.ok(o.has('foo'))
 })
