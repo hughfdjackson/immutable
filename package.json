@@ -1,14 +1,14 @@
 {
-  "name": "persist",
-  "description": "Persistant data-structures from the comfort of JavaScript - a lá clojure.",
+  "name": "persistent",
+  "description": "Persistent data-structures from the comfort of JavaScript - a lá clojure.",
   "version": "0.2.0",
-  "main": "src/persist.js",
+  "main": "src/persistent.js",
   "scripts": {
     "test": "mocha --ui qunit"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hughfdjackson/persist.git"
+    "url": "https://github.com/hughfdjackson/persistent.git"
   },
   "keywords": [],
   "author": "hughfdjackson",

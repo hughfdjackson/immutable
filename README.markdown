@@ -1,6 +1,6 @@
-# Persist
+# Persistent
 
-Persistant data-structures from the comfort of JavaScript - a lá clojure.
+Persistentant data-structures from the comfort of JavaScript - a lá clojure.
 
 ## Why?
 
@@ -9,7 +9,7 @@ Mutability causes headaches; immutability soothes them.  JavaScript's Object and
 ## Example
 
 ```javascript
-var p = require('persist'),
+var p = require('persistent'),
     person = p.dict({ firstName: 'hugh', secondName: 'jackson' })
     
 var personWithAge = person.set({ age: 24 })
@@ -21,9 +21,9 @@ personWithAge.get('age')   //= true
 
 ## Install
 
-`npm install persist` 
+`npm install persistent` 
 
-## persist.dict([Object]) -> dict
+## persistent.dict([Object]) -> dict
 
 Creates an empty dict, or sets the attributes if an object is passed.
 
@@ -83,7 +83,7 @@ updated.has('foo') //= false
 o.has('foo')       //= true
 ```
 
-### .transient() 
+### .transient() -> dict
 
 Returns a seperate, mutable object with the same attrs.
 
