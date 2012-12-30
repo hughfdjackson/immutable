@@ -18,7 +18,7 @@ var personWithAge = person.set({ age: 24 })
 
 person.has('age')          //= false
 personWithAge.has('age')   //= true
-personWithAge.get('age')   //= true
+personWithAge.get('age')   //= 24
 ```
 
 ## Install
