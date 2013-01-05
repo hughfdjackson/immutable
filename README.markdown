@@ -129,6 +129,10 @@ The following native methods return a new instance of p.array:
 * slice
 * reverse
 * concat
+* pop
+* push
+* shift
+* unshift 
 
 The following native methods work as expected for a regular array:
 
@@ -142,10 +146,3 @@ The following native methods work as expected for a regular array:
 * some
 * reduce 
 * reduceRight
-
-The following silently fail, since they're normally mutating:
-
-* pop
-* push
-* shift
-* unshift

@@ -24,7 +24,6 @@ var wrapMethod = function(method, type) {
 }
 
 
-
 var p = {}
 
 // Exported API
@@ -88,12 +87,15 @@ array.prototype = extend(clone(dict.prototype), {
     },
     shift: function(){
         return this.slice(1, this.length)
+    },
+    concat: function(a){
+        if ( a instanceof this.constructor ) return this.concat(a.transient())
+        else                                 return this.constructor(this.transient().concat(a))
     }
 })
 
 // wrap native array methods to work with persistent version or return a non-obj
-var arrayMethods = ["toString", "toLocaleString", "join", 
-                    "concat", "reverse",
+var arrayMethods = ["toString", "toLocaleString", "join", "reverse",
                     "slice", "splice", "sort", "filter", "forEach", 
                     "some", "every", "map", "indexOf", "lastIndexOf"]
 

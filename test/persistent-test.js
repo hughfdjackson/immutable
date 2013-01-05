@@ -165,6 +165,16 @@ test('array.shift', function(){
     a.deepEqual(arr.transient(), [])
 })
 
+test('array.concat', function(){
+    var arr = p.array([1, 2, 3]),
+        res = arr.concat([4, 5, 6])
+
+    a.deepEqual(res.transient(), [1, 2, 3, 4, 5, 6])
+
+    res = arr.concat(arr)
+    a.deepEqual(res.transient(), [1, 2, 3, 1, 2, 3])
+})
+
 test('array.length', function(){
     var arr = p.array([1, 2, 3])
     
