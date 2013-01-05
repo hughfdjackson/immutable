@@ -7,6 +7,20 @@ test('has right constructor', function(){
     a.equal(p.dict.prototype.constructor, p.dict)
 })
 
+test('are frozen', function(){
+    var d = p.dict({ })
+
+    d.x = 3
+    a.equal(d.x, undefined)
+})
+
+test('-data is frozen', function(){
+    var d = p.dict({ })
+    
+    d['-data'].x = 3
+    a.equal(d['-data'].x, undefined)
+})
+
 
 test('dict()', function(){
     var o = p.dict()
@@ -86,6 +100,20 @@ suite('p.array')
 
 test('has right constructor', function(){
     a.equal(p.array.prototype.constructor, p.array)
+})
+
+test('it is frozen', function(){
+    var arr = p.array([])
+
+    arr.x = 4
+    a.equal(arr.x, undefined)
+})
+
+test('-data is frozen', function(){
+    var arr = p.array([])
+
+    arr['-data'].x = 3
+    a.equal(arr['-data'].x, undefined)
 })
 
 test('takes p.dict\'s methods', function(){

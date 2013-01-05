@@ -31,7 +31,7 @@ var p = {}
 var dict = p.dict = function(attrs){
     var o = Object.create(dict.prototype)
     o['-data'] = Object.freeze(clone(attrs))
-    return o
+    return Object.freeze(o)
 }
 
 dict.prototype = {
@@ -67,7 +67,7 @@ var array = p.array = function(attrs){
     var o = Object.create(array.prototype)
     o['-data'] = Object.freeze(extend([], attrs))
     o.length = o['-data'].length
-    return o
+    return Object.freeze(o)
 }
 
 array.prototype = extend(clone(dict.prototype), {
