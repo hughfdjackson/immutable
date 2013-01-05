@@ -3,6 +3,11 @@ var a = require('assert'),
 
 suite('p.dict')
 
+test('has right constructor', function(){
+    a.equal(p.dict.prototype.constructor, p.dict)
+})
+
+
 test('dict()', function(){
     var o = p.dict()
     a.ok(o)
@@ -79,8 +84,23 @@ test('dict.transient returns a new mutable object with the same attrs', function
 
 suite('p.array')
 
-test('takes p.dict\'s methods', function(){
+test('has right constructor', function(){
+    a.equal(p.array.prototype.constructor, p.array)
+})
 
+test('takes p.dict\'s methods', function(){
+    var arr  = p.array(),
+        dict = p.dict()
+
+    a.equal(arr.get, dict.get)
+    a.equal(arr.remove, dict.remove)
+    a.equal(arr['delete'], dict['delete'])
+})
+
+test('array.set returns array', function(){
+    var arr = p.array().set(1, '2').set({ x: 3 }).set([1, 2, 3])
+
+    a.ok(arr instanceof p.array)
 })
 
 test('array.transient returns array with *all* props copied', function(){
@@ -94,10 +114,75 @@ test('array.transient returns array with *all* props copied', function(){
     a.ok(Array.isArray(arr))
 })
 
+test('push', function(){
+    var arr = p.array([1, 2, 3])
+    
+    arr.push(4, 5, 6)
+    a.deepEqual(arr.transient(), [1, 2, 3])
+    
+    arr = arr.push(4, 5, 6)
+    a.deepEqual(arr.transient(), [1, 2, 3, 4, 5, 6])
+})
+
+test('pop', function(){
+    var arr = p.array([1, 2, 3])
+
+    arr.pop()
+    a.deepEqual(arr.transient(), [1, 2, 3])
+    
+    arr = arr.pop()
+    a.deepEqual(arr.transient(), [1, 2])
+
+    arr = p.array([])
+    arr = arr.pop()
+
+    a.deepEqual(arr.transient(), [])
+})
+
+
+test('array.unshift', function(){
+    var arr = p.array([1, 2, 3])
+
+    arr.unshift(4, 5, 6)
+    a.deepEqual(arr.transient(), [1, 2, 3])
+
+    arr = arr.unshift(4, 5, 6)
+    a.deepEqual(arr.transient(), [4, 5, 6, 1, 2, 3])
+})
+
+test('array.shift', function(){
+    var arr = p.array([1, 2, 3])
+
+    arr.shift()
+    a.deepEqual(arr.transient(), [1, 2, 3])
+    
+    arr = arr.shift()
+    a.deepEqual(arr.transient(), [2, 3])
+
+    arr = p.array([])
+    arr = arr.shift()
+
+    a.deepEqual(arr.transient(), [])
+})
+
+test('array.length', function(){
+    var arr = p.array([1, 2, 3])
+    
+    a.equal(arr.length, 3)
+    
+    arr = arr.push(1)
+    a.equal(arr.length, 4)
+    
+    arr = arr.set(100, 3)
+    a.equal(arr.length, 101)
+})
+
+
+
 test('wraps all native methods', function(){
     var assertNotSameAsPrototype = function(name){ a.notEqual(p.array.prototype[name], Array.prototype[name]) }
 
-    ;["toString", "toLocaleString", "join", "pop", "push", "concat", "reverse", "shift", "unshift", "slice", 
+    ;["toString", "toLocaleString", "join", "pop", "push", "concat", "reverse", "slice", 
      "splice", "sort", "filter", "forEach", "some", "every", "map", "indexOf", "lastIndexOf", "reduce", "reduceRight"].forEach(assertNotSameAsPrototype)
 })
 
