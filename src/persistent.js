@@ -5,7 +5,6 @@ var extend   = function(t, f) { for ( var p in f ) t[p] = f[p]; return t },
     isObject = function(o){ return typeof o === 'object' && o !== null },
     slice    = function(a, f, n){ return [].slice.call(a, f, n) } 
 
-
 var wrapMethodBasic = function(method){
     return function(){
         var t = this.transient(),
@@ -98,7 +97,6 @@ array.prototype = extend(clone(dict.prototype), {
 var arrayMethods = ["toString", "toLocaleString", "join", "reverse",
                     "slice", "splice", "sort", "filter", "forEach", 
                     "some", "every", "map", "indexOf", "lastIndexOf"]
-
 
 arrayMethods.reduce(function(proto, name){ 
     proto[name] = wrapMethod(Array.prototype[name], array)
