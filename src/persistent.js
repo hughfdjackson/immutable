@@ -1,79 +1,74 @@
+'use strict'
 
 // Internal
 var extend   = function(t, f) { for ( var p in f ) t[p] = f[p]; return t },
+    merge    = function(t, f){ var r = clone(t); return extend(r, f) },
     clone    = function(o){ return extend({}, o) },
     isObject = function(o){ return typeof o === 'object' && o !== null },
-    slice    = function(a, f, n){ return [].slice.call(a, f, n) } 
+    slice    = function(a, f, n){ return [].slice.call(a, f, n) },
 
-var wrapMethodBasic = function(method){
-    return function(){
-        var t = this.transient(),
-            r = method.apply(t, arguments)
+    mapObj   = function(o, fn){
+        var r = {}
+        for ( var p in o ) r[p] = fn(o[p], p, o)
         return r
-    }
-}
+    },
+    pick     = function(o){ 
+        var names = slice(arguments, 1),
+            r     = {}
+        names.forEach(function(p){ r[p] = o[p] })
+        return r
+    },
+    noop     = function(){}
 
-var wrapMethod = function(method, type) {
-    return function(){
+
+// basic abstraction
+var base = {
+    set: function(k, v){
+        var attrs = this.transient()
+        if ( v ) attrs[k] = v
+        else     extend(attrs, k)
+        return this.constructor(attrs)
+    },
+    get: function(k){ return this['-data'][k]  },
+    has: function(k){ return k in this['-data'] },
+    remove: function(k){
         var t = this.transient()
-        var r = method.apply(t, arguments)
-        if ( isObject(r) ) return type(r)
-        else               return r
+        delete t[k]
+        return this.constructor(t)
     }
 }
-
+base['delete'] = base.remove
 
 var p = {}
 
 // Exported API
+
 // persistent.dict
-var dict = p.dict = function(attrs){
-    var o = Object.create(dict.prototype)
-    o['-data'] = Object.freeze(clone(attrs))
-    return Object.freeze(o)
+p.dict = function(attrs){
+    var o = Object.create(p.dict.prototype)
+    o['-data'] = Object.freeze(clone(attrs || {}))
+    Object.freeze(o)
+    return o
 }
 
-dict.prototype = {
-    constructor: dict,
-    set: function(k, v){
-        var attrs = clone(this['-data'])
-        
-        if ( v ) attrs[k] = v
-        else     attrs = extend(attrs, k)
-
-        return this.constructor(attrs)
-    },
-    get: function(key){
-        return this['-data'][key]
-    },
-    has: function(key){
-        return key in this['-data']
-    },
-    remove: function(key){
-        var attrs = clone(this['-data'])
-        delete attrs[key]
-        return dict(attrs)
-    },
-    transient: function(){
-        return clone(this['-data'])
-    }
-}
-dict.prototype['delete'] = dict.prototype.remove
+p.dict.prototype = merge(base, {
+    constructor: p.dict,
+    transient: function(){ return extend({}, this['-data']) }
+})
 
 
-// persistent.array
-var array = p.array = function(attrs){
-    var o = Object.create(array.prototype)
+// persistent.list
+p.list = function(attrs){
+    var o = Object.create(p.list.prototype)
     o['-data'] = Object.freeze(extend([], attrs))
-    o.length = o['-data'].length
-    return Object.freeze(o)
+    o.length   = o['-data'].length 
+    Object.freeze(o)
+    return o
 }
 
-array.prototype = extend(clone(dict.prototype), {
-    constructor: array,
-    transient: function(){
-        return extend([], this['-data'])
-    },
+p.list.prototype = merge(base, {
+    constructor: p.list,
+    transient: function(){ return extend([], this['-data']) },
     push: function(){
         var args = slice(arguments)
         return this.concat(args)
@@ -93,23 +88,26 @@ array.prototype = extend(clone(dict.prototype), {
     }
 })
 
-// wrap native array methods to work with persistent version or return a non-obj
-var arrayMethods = ["toString", "toLocaleString", "join", "reverse",
-                    "slice", "splice", "sort", "filter", "forEach", 
-                    "some", "every", "map", "indexOf", "lastIndexOf"]
+var retPrim = pick(Array.prototype, 'toString', 'toLocaleString', 'indexOf', 'lastIndexOf', 'some', 'every')
+var retArr  = pick(Array.prototype, 'join', 'reverse', 'slice', 'splice', 'sort', 'filter', 'forEach', 'map')
+var retAny  = pick(Array.prototype, 'reduce', 'reduceRight')
 
-arrayMethods.reduce(function(proto, name){ 
-    proto[name] = wrapMethod(Array.prototype[name], array)
-    return proto
-}, array.prototype)
+var wrapPrim = function(fn){
+    return function(){
+        var t = this.transient()
+        return fn.apply(t, arguments)
+    }
+}
+var wrapArr = function(fn){
+    return function(){
+        var t = this.transient()
+        return this.constructor(fn.apply(t, arguments))
+    }
+}
 
-// don't wrap the output, even if it's an object
-var delicateArrayMethods = ["reduce", "reduceRight"]
-
-delicateArrayMethods.reduce(function(proto, name){
-    proto[name] = wrapMethodBasic(Array.prototype[name])
-    return proto
-}, array.prototype)
+extend(p.list.prototype, mapObj(retPrim, wrapPrim))
+extend(p.list.prototype, mapObj(retAny, wrapPrim))
+extend(p.list.prototype, mapObj(retArr, wrapArr))
 
 // export
 module.exports = p
