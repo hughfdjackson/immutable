@@ -101,7 +101,7 @@ delete trans.foo
 o.has('foo') //= true
 ```
 
-## persistent.array(Array) -> array
+## persistent.list(Array) -> array
 
 Shares the same API as `persistent.dict`, except:
 
@@ -110,7 +110,7 @@ Shares the same API as `persistent.dict`, except:
 Returns a seperate, mutable array with the same attrs.
 
 ```javascript
-var arr1 = p.array([1, 2, 3]),
+var arr1 = p.list([1, 2, 3]),
     arr2 = arr1.transient()
     
 arr2.splice(1)
@@ -120,7 +120,7 @@ arr1[1] !== arr2[1] //= true
 
 ### Native Methods
 
-The following native methods return a new instance of p.array:
+The following native methods return a new instance of p.list:
                     
 * map
 * sort
