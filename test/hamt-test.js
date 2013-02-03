@@ -75,3 +75,33 @@ test('h.has', function(){
     a.equal(h.has(trie, 'foo'), true)
     a.equal(h.has(trie, 'bar'), false)
 })
+
+test('h.get', function(){
+    var trie = { type: 'trie',
+                 children: {
+                     3: { type: 'trie',
+                          children: {
+                              3: { type: 'value', key: 'foo', value: 4 }}}}}
+
+    a.equal(h.get(trie, 'foo'), 4)
+    a.equal(h.get(trie, 'bar'), undefined)
+
+    // on the 7-deep with the hash ending
+    var trie = { type: 'trie',
+                 children: {
+                     3: { type: 'trie',
+                          children: {
+                              3: { type: 'trie',
+                                   children: {
+                                       23: { type: 'trie',
+                                             children: {
+                                                 14: { type: 'trie',
+                                                     children: {
+                                                         24: { type: 'trie',
+                                                               children: {
+                                                                   5: { type: 'trie',
+                                                                        children: {
+                                                                            0: { type: 'hashmap', values: { 'foo': 3 }}}}}}}}}}}}}}}}
+    a.equal(h.get(trie, 'foo'), 3)
+    a.equal(h.get(trie, 'bar'), undefined)
+})

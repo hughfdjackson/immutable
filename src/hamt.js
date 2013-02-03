@@ -74,7 +74,13 @@ var has    = function(trie, key) {
     else                                         return false
 }
 
-var get    = function(trie, k) {}
+var get    = function(trie, key) {
+    var node = realValue(trie, key)
+
+    if ( isValue(node) && node.key === key ) return node.value
+    if ( isHashmap(node) && key in node.values ) return node.values[key]
+}
+
 var set    = function(trie, k, v) {}
 var remove = function(trie, k) {}
 
