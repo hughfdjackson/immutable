@@ -25,7 +25,7 @@ var reduceWhile = function(a, fn, pred, seed){
     return seed
 }
 
-// a HAMT trie is one in which each non-leaf node has 32 children, from 0-32).
+// a hash array map trie (hamt) is one in which each non-leaf node has 32 children, from 0-31.
 // The children could be A) an empty node (represented here as an absence of
 // a property at all in the children hash), B) a trie, or C) a value object, which
 // contains the key and val (since the trie is traversed by a hash, this is needed to
