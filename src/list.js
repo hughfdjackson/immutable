@@ -1,5 +1,5 @@
 var u    = require('./util'),
-    base = require('./base')
+    dict = require('./dict')
 
 // persistent.list
 var list = function(attrs){
@@ -10,7 +10,7 @@ var list = function(attrs){
     return o
 }
 
-list.prototype = u.merge(base, {
+list.prototype = u.merge(dict.prototype, {
     constructor: list,
     transient: function(){ return u.extend([], this['-data']) },
     push: function(){

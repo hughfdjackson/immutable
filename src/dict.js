@@ -1,5 +1,4 @@
-var u = require('./util'),
-    base = require('./base')
+var u = require('./util')
 
 // persistent.dict
 var dict = function(attrs){
@@ -9,9 +8,23 @@ var dict = function(attrs){
     return o
 }
 
-dict.prototype = u.merge(base, {
+dict.prototype = {
     constructor: dict,
-    transient: function(){ return u.extend({}, this['-data']) }
-})
+    transient: function(){ return u.extend({}, this['-data']) },
+    set: function(k, v){
+        var attrs = this.transient()
+        if ( v ) attrs[k] = v
+        else     u.extend(attrs, k)
+        return this.constructor(attrs)
+    },
+    get: function(k){ return this['-data'][k]  },
+    has: function(k){ return k in this['-data'] },
+    remove: function(k){
+        var t = this.transient()
+        delete t[k]
+        return this.constructor(t)
+    }
+}
+dict.prototype['delete'] = dict.prototype.remove
 
 module.exports = dict
