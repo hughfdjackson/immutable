@@ -1,16 +1,11 @@
 var u = require('./util')
 
-// persistent.dict
-var dict = function(attrs){
-    var o = Object.create(dict.prototype)
-    o['-data'] = Object.freeze(u.clone(attrs || {}))
-    Object.freeze(o)
-    return o
-}
-
-dict.prototype = {
-    constructor: dict,
-    transient: function(){ return u.extend({}, this['-data']) },
+var dict = u.ctor({
+    constructor: function(attrs){
+        this['-data'] = Object.freeze(u.clone(attrs || {}))
+        Object.freeze(this)
+        return this
+    },
     set: function(k, v){
         var attrs = this.transient()
         if ( v ) attrs[k] = v
@@ -23,8 +18,10 @@ dict.prototype = {
         var t = this.transient()
         delete t[k]
         return this.constructor(t)
-    }
-}
+    },
+    transient: function(){ return u.extend({}, this['-data']) }
+})
+
 dict.prototype['delete'] = dict.prototype.remove
 
 module.exports = dict

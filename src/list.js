@@ -2,16 +2,14 @@ var u    = require('./util'),
     dict = require('./dict')
 
 // persistent.list
-var list = function(attrs){
-    var o = Object.create(list.prototype)
-    o['-data'] = Object.freeze(u.extend([], attrs))
-    o.length   = o['-data'].length
-    Object.freeze(o)
-    return o
-}
-
-list.prototype = u.merge(dict.prototype, {
-    constructor: list,
+var list = u.ctor(u.merge(dict.prototype, {
+    constructor: function(attrs){
+        var o = Object.create(list.prototype)
+        o['-data'] = Object.freeze(u.extend([], attrs))
+        o.length   = o['-data'].length
+        Object.freeze(o)
+        return o
+    },
     transient: function(){ return u.extend([], this['-data']) },
     push: function(){
         var args = u.slice(arguments)
@@ -30,7 +28,7 @@ list.prototype = u.merge(dict.prototype, {
         if ( a instanceof this.constructor ) return this.concat(a.transient())
         else                                 return this.constructor(this.transient().concat(a))
     }
-})
+}))
 
 var retPrim = u.pick(Array.prototype, 'toString', 'toLocaleString', 'indexOf', 'lastIndexOf', 'some', 'every')
 var retArr  = u.pick(Array.prototype, 'join', 'reverse', 'slice', 'splice', 'sort', 'filter', 'forEach', 'map')
