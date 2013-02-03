@@ -2,7 +2,7 @@
 
 # Persistent
 
-Persistent data-structures from the comfort of JavaScript - a lá clojure.
+Persistent data-structures from the comfort of JavaScript - a lá clojure.  Based on [Bagwell (2001)](http://lampwww.epfl.ch/papers/idealhashtrees.pdf), and [Clojure's persistent implementation of a Hash Array Mapped Trie](https://github.com/clojure/clojure/blob/master/src/jvm/clojure/lang/PersistentHashMap.java).
 
 ## Why?
 
@@ -13,7 +13,7 @@ Mutability causes headaches; immutability soothes them.  JavaScript's Object and
 ```javascript
 var p = require('persistent'),
     person = p.dict({ firstName: 'hugh', secondName: 'jackson' })
-    
+
 var personWithAge = person.set({ age: 24 })
 
 person.has('age')          //= false
@@ -23,7 +23,7 @@ personWithAge.get('age')   //= 24
 
 ## Install
 
-`npm install persistent` 
+`npm install persistent`
 
 ## persistent.dict([Object]) -> dict
 
@@ -112,7 +112,7 @@ Returns a seperate, mutable array with the same attrs.
 ```javascript
 var arr1 = p.list([1, 2, 3]),
     arr2 = arr1.transient()
-    
+
 arr2.splice(1)
 
 arr1[1] !== arr2[1] //= true
@@ -121,7 +121,7 @@ arr1[1] !== arr2[1] //= true
 ### Native Methods
 
 The following native methods return a new instance of p.list:
-                    
+
 * map
 * sort
 * filter
@@ -132,7 +132,7 @@ The following native methods return a new instance of p.list:
 * pop
 * push
 * shift
-* unshift 
+* unshift
 
 The following native methods work as expected for a regular array:
 
@@ -144,5 +144,5 @@ The following native methods work as expected for a regular array:
 * lastIndexOf
 * every
 * some
-* reduce 
+* reduce
 * reduceRight

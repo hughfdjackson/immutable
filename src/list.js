@@ -1,14 +1,12 @@
 var u    = require('./util'),
     dict = require('./dict')
 
-// persistent.list
 var list = u.ctor(u.merge(dict.prototype, {
     constructor: function(attrs){
-        var o = Object.create(list.prototype)
-        o['-data'] = Object.freeze(u.extend([], attrs))
-        o.length   = o['-data'].length
-        Object.freeze(o)
-        return o
+        this['-data'] = dict(attrs)['-data']
+        this.length = (attrs || []).length
+        Object.freeze(this)
+        return this
     },
     transient: function(){ return u.extend([], this['-data']) },
     push: function(){

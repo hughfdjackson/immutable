@@ -11,6 +11,11 @@ var mapObj = function(o, fn){
     return r
 }
 
+var reduceObj = function(o, fn, seed){
+    for ( var p in o ) seed = fn(seed, o[p], o)
+    return seed
+}
+
 var pick = function(o){
     var names = slice(arguments, 1),
         r     = {}
@@ -31,14 +36,16 @@ var ctor = function(p){
     return C
 }
 
+
 module.exports = {
-    extend: extend,
-    merge: merge,
-    clone: clone,
-    isObject: isObject,
-    slice: slice,
-    mapObj: mapObj,
-    pick: pick,
-    noop: noop,
-    ctor: ctor
+    extend    : extend,
+    merge     : merge,
+    clone     : clone,
+    isObject  : isObject,
+    slice     : slice,
+    mapObj    : mapObj,
+    reduceobj : reduceObj,
+    pick      : pick,
+    noop      : noop,
+    ctor      : ctor
 }
