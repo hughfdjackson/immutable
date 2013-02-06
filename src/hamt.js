@@ -17,14 +17,6 @@ var hashPath = function(h){
 // string -> [int]
 var keyPath = function(k){ return hashPath(hash(k)) }
 
-var reduceWhile = function(a, fn, pred, seed){
-    for ( var i = 0; i < a.length; i += 1 ) {
-        if ( ! pred(a[i], i, a) ) return seed
-        seed = fn(seed, a[i], i, a)
-    }
-    return seed
-}
-
 // a hash array map trie (hamt) is one in which each non-leaf node has 32 children, from 0-31.
 // The children could be A) an empty node (represented here as an absence of
 // a property at all in the children hash), B) a trie, or C) a value object, which
