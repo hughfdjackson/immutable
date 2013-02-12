@@ -44,11 +44,14 @@ var get = multimethod()
 var set = multimethod()
     .dispatch('type')
     .when('trie', function(trie, path, key, val){
-        var child    = trie.children[path[0]]
-        if ( child === undefined || ( child.type === 'value' && child.key === key ) )
-            return Trie(copyAdd(trie.children, path[0], Value(key, val, path.slice(1))))
+        var child = trie.children[path[0]]
+
+        if ( child === undefined  )   return Trie(copyAdd(trie.children, path[0], Value(key, val, path.slice(1))))
+        if ( child.type === 'value' ) return Trie(copyAdd(trie.children, path[0], set(child, path.slice(1), key, val)))
     })
-    .when('value', function(value, path, key, val){})
+    .when('value', function(value, path, key, val){
+        if ( value.key === key ) return Value(key, val, path)
+    })
     .when('hashmap', function(hashmap, path, key){})
 
 // node, path, key -> Trie
