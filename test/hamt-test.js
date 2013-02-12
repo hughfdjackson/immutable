@@ -1,5 +1,8 @@
 var a = require('assert')
 var h = require('../src/hamt')
+var util = require('util')
+var log = function(o){ console.log(util.inspect(o, false, null)) }
+
 
 suite('hamt - has')
 
@@ -58,6 +61,12 @@ test('2 deep', function(){
     a.equal(h.get(t, [4, 3, 5, 6], 'quux'), undefined)
 })
 
+test('hashmap', function(){
+    var t = h.Trie({ 3: h.Hashmap({ 'foo': h.Value('foo', 'bar', []) }) })
+
+    a.equal(h.get(t, [3], 'foo'), 'bar')
+})
+
 
 suite('hamt - set')
 
@@ -77,31 +86,52 @@ test('overwrite', function(){
 })
 
 
-// test('1 deep w/ conflict', function(){
-//     var t1 = h.Trie({ 3: h.Value('foo', 'bar', [3, 5, 6]) })
-//     var t2 = h.set(t1, [3, 3, 4, 5], 'wiggle', 'quux')
+test('shallow conflict', function(){
+    var t1 = h.Trie({ 3: h.Value('foo', 'bar', [3, 5, 6]) })
+    var t2 = h.set(t1, [3, 4, 4, 5], 'wibble', 'quux')
 
-//     a.deepEqual(t2, h.Trie({
-//         3: h.Trie({
-//             3: h.Trie({
-//                 4: h.Value('wiggle', 'quux', [5]),
-//                 5: h.Value('foo', 'bar', [6]) })})}))
-// })
+    a.deepEqual(t2, h.Trie({
+        3: h.Trie({
+                    4: h.Value('wibble', 'quux', [4, 5]),
+                    3: h.Value('foo', 'bar', [5, 6]) }) }) )
+})
 
-// test('deep with no conflict', function(){
+test('deep conflict', function(){
+    var t1 = h.Trie({ 3: h.Value('foo', 'bar', [3, 5, 6]) })
+    var t2 = h.set(t1, [3, 3, 4, 5], 'wrinkle', 'luux')
 
-// })
+    var expected = h.Trie({
+        3: h.Trie({
+            3: h.Trie({
+                    4: h.Value('wrinkle', 'luux', [5]),
+                    5: h.Value('foo', 'bar', [6]) }) }) })
 
-// test('shallow', function(){
-//     var t1 = h.Trie({ 3: h.Value('foo', 'bar', [3, 5, 6]) })
-//     var t2 = h.set(t1, [3, 3, 4, 5], 'wiggle', 'quux')
+    a.deepEqual(t2, expected)
+})
 
-//     a.deepEqual(t2, h.Trie({
-//         3: h.Trie({
-//             3: h.Trie({
-//                 4: h.Value('wiggle', 'quux', [4, 5]),
-//                 5: h.Value('foo', 'bar', [5, 6]) }) }) }))
-// })
+test('deepest conflict', function(){
+    var t1 = h.Trie({ 3: h.Value('foo', 'bar', []) })
+    var t2 = h.set(t1, [3], 'squid', 'bizz')
+
+
+    var expected = h.Trie({
+        3: h.Hashmap({
+            'foo': h.Value('foo', 'bar', []),
+            'squid': h.Value('squid', 'bizz', []) }) })
+
+    a.deepEqual(t2, expected)
+})
+
+test('overwriting deep conflict', function(){
+    var t1 = h.Hashmap({ 'foo': h.Value('foo', 'bar', []) })
+    var t2 = h.set(t1, [], 'bar', 'bizz')
+
+    var expected = h.Hashmap({
+        foo: h.Value('foo', 'bar', []),
+        bar: h.Value('bar', 'bizz', []) })
+
+    a.deepEqual(t2, expected)
+})
 
 suite('hamt - nodes')
 
