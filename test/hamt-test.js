@@ -68,6 +68,30 @@ test('shallow', function(){
     a.deepEqual(t2, h.Trie({ 3: h.Value('wiggle', 'quux', [3, 4, 5]) }))
 })
 
+test('overwrite', function(){
+    var t1 = h.Trie({ 3: h.Value('wiggle', 'quux', [3, 4, 5]) })
+    var t2 = h.set(t1, [3, 3, 4, 5], 'wiggle', 'baz')
+
+    a.deepEqual(t1, h.Trie({ 3: h.Value('wiggle', 'quux', [3, 4, 5]) }))
+    a.deepEqual(t2, h.Trie({ 3: h.Value('wiggle', 'baz', [3, 4, 5]) }))
+})
+
+
+// test('1 deep w/ conflict', function(){
+//     var t1 = h.Trie({ 3: h.Value('foo', 'bar', [3, 5, 6]) })
+//     var t2 = h.set(t1, [3, 3, 4, 5], 'wiggle', 'quux')
+
+//     a.deepEqual(t2, h.Trie({
+//         3: h.Trie({
+//             3: h.Trie({
+//                 4: h.Value('wiggle', 'quux', [5]),
+//                 5: h.Value('foo', 'bar', [6]) })})}))
+// })
+
+// test('deep with no conflict', function(){
+
+// })
+
 // test('shallow', function(){
 //     var t1 = h.Trie({ 3: h.Value('foo', 'bar', [3, 5, 6]) })
 //     var t2 = h.set(t1, [3, 3, 4, 5], 'wiggle', 'quux')

@@ -4,7 +4,11 @@ var u = require('./util')
 var hash = require('string-hash')
 var multimethod = require('multimethod')
 
-
+var copyAdd = function(o, k, v){
+    o = u.clone(o)
+    o[k] = v
+    return o
+}
 
 // node, [int], string -> bool
 var has = multimethod()
@@ -39,7 +43,11 @@ var get = multimethod()
 // node, path, string, val -> Trie
 var set = multimethod()
     .dispatch('type')
-    .when('trie', function(trie, path, key, val){})
+    .when('trie', function(trie, path, key, val){
+        var child    = trie.children[path[0]]
+        if ( child === undefined || ( child.type === 'value' && child.key === key ) )
+            return Trie(copyAdd(trie.children, path[0], Value(key, val, path.slice(1))))
+    })
     .when('value', function(value, path, key, val){})
     .when('hashmap', function(hashmap, path, key){})
 
