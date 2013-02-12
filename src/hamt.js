@@ -1,90 +1,96 @@
-var u = require('./util'),
-    hash = require('string-hash')
+'use strict'
 
-var mask = function(hash, shift){
-    return (hash >>> shift) & 0x01f
+var u = require('./util')
+var hash = require('string-hash')
+var multimethod = require('multimethod')
+
+
+
+// node, [int], string -> bool
+var has = multimethod()
+    .dispatch('type')
+    .when('trie', function(trie, path, key){
+        var child = trie.children[path[0]]
+        if ( child === undefined )    return false
+        if ( child.type === 'value' ) return has(child, path, key)
+        if ( child.type === 'trie' )  return has(child, path.slice(1), key)
+    })
+    .when('value', function(value, path, key){
+        if ( value.key === key ) return true
+        else                     return false
+    })
+    .when('hashmap', function(hashmap, path, key){})
+
+// node, [int], string -> val
+var get = multimethod()
+    .dispatch('type')
+    .when('trie', function(trie, path, key){
+        var child = trie.children[path[0]]
+        if ( child === undefined )    return undefined
+        if ( child.type === 'value' ) return get(child, path, key)
+        if ( child.type === 'trie' )  return get(child, path.slice(1), key)
+    })
+    .when('value', function(value, path, key){
+        if ( value.key === key ) return value.value
+        else                     return undefined
+    })
+    .when('hashmap', function(hashmap, path, key){})
+
+// node, path, string, val -> Trie
+var set = multimethod()
+    .dispatch('type')
+    .when('trie', function(trie, path, key, val){})
+    .when('value', function(value, path, key, val){})
+    .when('hashmap', function(hashmap, path, key){})
+
+// node, path, key -> Trie
+var remove = multimethod()
+    .dispatch('type')
+
+
+// node ctors
+var Trie = function(children){
+    return Object.freeze({ type: 'trie', children: Object.freeze(children) })
 }
 
-var splitPositions = [0, 5, 10, 15, 20, 25, 30]
+var Value    = function(key, value, path){
+    return Object.freeze({ type: 'value', key: key, value: value, path: path })
+}
+
+var Hashmap  = function(values){
+    return Object.freeze({ type: 'hashmap', values: Object.freeze(values) })
+}
+
+// hashing operations
+
+// get a <= 5 bit section of a hash, shifted from the left position
+// int, int -> int
+var mask5 = function(hash, from){ return (hash >>> from) & 0x01f }
 
 // get the path from an already hashed key
 // int -> [int]
-var hashPath = function(h){
-    return splitPositions.map(mask.bind(null, h))
+var hashPath = function(hash){
+    return splitPositions.map(mask5.bind(null, hash))
 }
+var splitPositions = [0, 5, 10, 15, 20, 25, 30]
 
-// get the path from a key
+// get the maximal path to a key
 // string -> [int]
-var keyPath = function(k){ return hashPath(hash(k)) }
-
-// a hash array map trie (hamt) is one in which each non-leaf node has 32 children, from 0-31.
-// The children could be A) an empty node (represented here as an absence of
-// a property at all in the children hash), B) a trie, or C) a value object, which
-// contains the key and val (since the trie is traversed by a hash, this is needed to
-// ensure that the key is the same on retrieval.
-// Since the trie's depth is bounded by the number of 5-bit groups in the 32-bit int, when
-// collision occurs, there can only be a maximum of 7 depths of specificity.  After this, a regular 'hash'
-// value will be used as a catch all conflict resolver.
-
-// nodes
-var trie     = function(){     return { type : 'trie', children: {} } }
-var value    = function(k, v){ return { type: 'value', key: k, value: v } }
-var hashmap  = function(){     return { type: 'hashmap', values: {} } }
-
-var isTrie    = function(v){ return v.type === 'trie' }
-var isValue   = function(v){ return v.type === 'value' }
-var isHashmap = function(v){ return v.type === 'hashmap' }
-
-var unpack = function(v, pathPart, k) {
-    if ( isTrie(v)  ) return v.children[pathPart]
-}
-
-var getPathState = function(trie, k){
-    var path = keyPath(k)
-
-    // always O(n) at the moment
-    return path.reduce(function(state, pathPart){
-        var newNode = unpack(state.currNode, pathPart)
-        if ( newNode === undefined ) return state
-        return {
-            currNode: newNode,
-            realPath: state.realPath.concat([pathPart])
-        }
-    }, { currNode: trie, realPath: [] })
-}
-
-var realPath = function(trie, k){ return getPathState(trie, k).realPath }
-var realValue = function(trie, k){ return getPathState(trie, k).currNode }
-
-// immutable trie operations
-var has    = function(trie, key) {
-    // get longest possible path to the key
-    var node = realValue(trie, key)
-
-    if ( isValue(node) && node.key === key )     return true
-    if ( isHashmap(node) && key in node.values ) return true
-    else                                         return false
-}
-
-var get    = function(trie, key) {
-    var node = realValue(trie, key)
-
-    if ( isValue(node) && node.key === key ) return node.value
-    if ( isHashmap(node) && key in node.values ) return node.values[key]
-}
-
-var set    = function(trie, k, v) {}
-var remove = function(trie, k) {}
+var path =  function(k){ return hashPath(hash(k)) }
 
 module.exports = {
-    hashPath: hashPath,
-    keyPath : keyPath,
-    mask    : mask,
-    hash    : hash,
-    has     : has,
-    get     : get,
-    set     : set,
-    remove  : remove,
-    unpack  : unpack,
-    realPath: realPath
+    Trie      : Trie,
+    Value     : Value,
+    Hashmap   : Hashmap,
+    path      : path,
+    has       : has,
+    get       : get,
+    set       : set,
+    remove    : remove
+}
+
+module.exports['-'] = {
+    hashPath  : hashPath,
+    mask5     : mask5,
+    hash      : hash
 }
