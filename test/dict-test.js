@@ -59,13 +59,12 @@ test('dict.set(k, v)', function(){
 //     a.ok(o2.has('z'))
 // })
 
-// test('dict.get', function(){
-//     var o = p.dict().set('x', 3)
+test('dict.get', function(){
+    var o = p.dict().set('x', 3)
 
-
-//     a.equal(o.get('x'), 3)
-//     a.equal(o.get('y'), undefined)
-// })
+    a.equal(o.get('x'), 3)
+    a.equal(o.get('y'), undefined)
+})
 
 test('dict.has', function(){
     var o = p.dict().set('x', 3)
@@ -74,13 +73,13 @@ test('dict.has', function(){
     a.ok(!o.has('y'))
 })
 
-// test('dict.remove', function(){
-//     var o1 = p.dict({ x: 3 }),
-//         o2 = o1.remove('x')
+test('dict.remove', function(){
+    var o1 = p.dict().set('x', 3),
+        o2 = o1.remove('x')
 
-//     a.ok(o1.has('x'))
-//     a.ok(!o2.has('x'))
-// })
+    a.ok(o1.has('x'))
+    a.ok(!o2.has('x'))
+})
 
 
 // test('dict.delete alias for dict.remove', function(){

@@ -22,16 +22,21 @@ var dict = u.ctor({
         ret['-data'](secret, t)
         return ret
     },
-    get: function(k){ },
-    transient: function(){ },
+    get: function(k){
+        return h.get(this['-data'](secret), h.path(k), k)
+    },
+    transient: function(){
+
+    },
     has: function(k){
         return h.has(this['-data'](secret), h.path(k), k)
     },
 
     remove: function(k){
-        var t = this.transient()
-        delete t[k]
-        return this.constructor(t)
+        var t = h.remove(this['-data'](secret), h.path(k), k)
+        var ret = this.constructor()
+        ret['-data'](secret, t)
+        return ret
     }
 
 })
