@@ -111,38 +111,39 @@ test('dict.transient returns a new mutable object with the same attrs', function
 
 suite('hammer test')
 
-test('set, get, transient and remove', function(){
-    var range = function(s, e){
-        var a = []
-        for ( var i = s; i < e; i += 1 ) a.push(i)
-        return a
-    }
+// test('set, get, transient and remove', function(){
+//     var range = function(s, e){
+//         var a = []
+//         for ( var i = s; i < e; i += 1 ) a.push(i)
+//         return a
+//     }
 
-    var alpha = 'abcdefghijklmnopqrstuvwxyz'.split('')
-    var randNth = function(a){ return a[Math.floor(Math.random() * a.length)] }
+//     var alpha = 'abcdefghijklmnopqrstuvwxyz'.split('')
+//     var randNth = function(a){ return a[Math.floor(Math.random() * a.length)] }
 
-    var vals = range(0, 10000).map(function(i){ var o = {}; o[i] = randNth(alpha); return o })
+//     var vals = range(0, 10000).map(function(i){ var o = {}; o[i] = randNth(alpha); return o })
 
-    var o = vals.reduce(function(o, v){
-        return o.set(v)
-    }, p.dict())
+//     var o = vals.reduce(function(o, v){
+//         return o.set(v)
+//     }, p.dict())
 
-    var t = o.transient()
+//     var t = o.transient()
 
-    // check all values are stored, both in the object and the transient
-    vals.forEach(function(val){
-        var k = Object.keys(val)[0]
-        var v = val[k]
+//     // check all values are stored, both in the object and the transient
+//     vals.forEach(function(val){
+//         var k = Object.keys(val)[0]
+//         var v = val[k]
 
-        a.equal(o.get(k), v)
-        a.equal(t[k], v)
-    })
+//         a.equal(o.get(k), v)
+//         a.equal(o.has(k), true)
+//         a.equal(t[k], v)
+//     })
 
-    // 'empty' the object
-    var empty = vals.reduce(function(o, val){
-        var k = Object.keys(val)[0]
-        return o.remove(k)
-    }, o)
+//     // 'empty' the object
+//     var empty = vals.reduce(function(o, val){
+//         var k = Object.keys(val)[0]
+//         return o.remove(k)
+//     }, o)
 
-    a.equal(Object.keys(empty.transient()), 0)
-})
+//     a.equal(Object.keys(empty.transient()), 0)
+// })

@@ -1,14 +1,37 @@
-var u    = require('./util'),
-    dict = require('./dict')
+var u    = require('./util')
+var h    = require('./hamt')
+var dict = require('./dict')
+
+var secret = {}
 
 var list = u.ctor(u.merge(dict.prototype, {
     constructor: function(attrs){
-        this['-data'] = dict(attrs)['-data']
-        this.length = (attrs || []).length
-        Object.freeze(this)
-        return this
+        var store = h.Trie({})
+
+        this['-data'] = function(s, data){
+            if ( s === secret && data ) return store = data
+            else                        return store
+        }
+        return attrs ? this.set(attrs) : this
     },
-    transient: function(){ return u.extend([], this['-data']) },
+
+    set: function(k, v){
+        if ( typeof k === 'object' && typeof k !== null ) {
+            var keys = Object.keys(k)
+            return keys.reduce(function(dict, key){ return dict.set(key, k[key]) }, this)
+        }
+        var t = h.set(this['-data'](secret), h.path(k), k, v)
+        var ret = this.constructor()
+        ret['-data'](secret, t)
+
+        ret.length = this.length > k ? this.length  : parseInt(k, 10) + 1
+        Object.freeze(this)
+        return ret
+    },
+
+    transient: function(){
+        return u.extend([], h.transient(this['-data'](secret)))
+    },
     push: function(){
         var args = u.slice(arguments)
         return this.concat(args)

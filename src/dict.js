@@ -17,7 +17,7 @@ var dict = u.ctor({
         return attrs ? this.set(attrs) : this
     },
     set: function(k, v){
-        if ( typeof k !== 'string' ) {
+        if ( typeof k === 'object' && typeof k !== null ) {
             var keys = Object.keys(k)
             return keys.reduce(function(dict, key){ return dict.set(key, k[key]) }, this)
         }
@@ -27,6 +27,7 @@ var dict = u.ctor({
         return ret
     },
     get: function(k){
+        k = k.toString()
         return h.get(this['-data'](secret), h.path(k), k)
     },
     transient: function(){
