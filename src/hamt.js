@@ -119,6 +119,28 @@ var remove = multimethod()
         else                     return Hashmap(ret)
     })
 
+var transient = multimethod()
+    .dispatch('type')
+    .when('trie', function(trie){
+        var keys = Object.keys(trie.children)
+        var vals = keys.map(function(key){
+            return transient(trie.children[key])
+        })
+
+        return vals.reduce(u.extend)
+    })
+    .when('value', function(value){
+        var o = {}
+        o[value.key] = value.value
+        return o
+    })
+    .when('hashmap', function(hashmap){
+        var keys = Object.keys(hashmap.values)
+        var vals = keys.map(function(key){
+            return transient(hashmap.values[key])
+        })
+        return vals.reduce(u.extend)
+    })
 
 // node ctors
 var Trie = function(children){
@@ -158,7 +180,8 @@ module.exports = {
     has       : has,
     get       : get,
     set       : set,
-    remove    : remove
+    remove    : remove,
+    transient : transient
 }
 
 module.exports['-'] = {

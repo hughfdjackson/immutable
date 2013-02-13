@@ -188,6 +188,22 @@ test('resolves deep conflict with hashmap',  function(){
     a.deepEqual(t2, expected)
 })
 
+suite('hamt - transient')
+
+test('transient', function(){
+    var t1 = h.Trie({
+            3: h.Trie({
+                5: h.Hashmap({
+                    bar: h.Value('bar', 'quux', []),
+                    foo: h.Value('foo', 'bar', []) }) }),
+            4: h.Value('baz', 'quux', [2, 3, 4]) })
+
+    var o = h.transient(t1)
+
+    a.deepEqual(o, { bar: 'quux', foo: 'bar', baz: 'quux' })
+})
+
+
 suite('hamt - nodes')
 
 test('Trie', function(){
