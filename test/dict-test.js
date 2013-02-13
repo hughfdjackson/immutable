@@ -28,14 +28,14 @@ test('dict()', function(){
     a.ok(o)
 })
 
-// test('dict(Object)', function(){
-//     var opts = { x: 1, y: 2 },
-//         o = p.dict(opts)
+test('dict(Object)', function(){
+    var opts = { x: 1, y: 2 },
+        o = p.dict(opts)
 
-//     a.ok(o.has('x'))
-//     delete opts.x
-//     a.ok(o.has('x'))
-// })
+    a.ok(o.has('x'))
+    delete opts.x
+    a.ok(o.has('x'))
+})
 
 test('dict.set(k, v)', function(){
     var o  = p.dict(),
@@ -45,19 +45,18 @@ test('dict.set(k, v)', function(){
 
 })
 
-// test('dict.set', function(){
-//     var o1 = p.dict({ 'x': 3 }),
-//         o2 = o1.set('y', 3).set({ 'z': 3 })
+test('dict.set', function(){
+    var o1 = p.dict({ 'x': 3 }),
+        o2 = o1.set('y', 3).set({ 'z': 3 })
 
+    a.ok(o1.has('x'))
+    a.ok(!o1.has('y'))
+    a.ok(!o1.has('z'))
 
-//     a.ok(o1.has('x'))
-//     a.ok(!o1.has('y'))
-//     a.ok(!o1.has('z'))
-
-//     a.ok(o2.has('x'))
-//     a.ok(o2.has('y'))
-//     a.ok(o2.has('z'))
-// })
+    a.ok(o2.has('x'))
+    a.ok(o2.has('y'))
+    a.ok(o2.has('z'))
+})
 
 test('dict.get', function(){
     var o = p.dict().set('x', 3)
@@ -82,25 +81,26 @@ test('dict.remove', function(){
 })
 
 
-// test('dict.delete alias for dict.remove', function(){
-//     var o = p.dict()
+test('dict.delete alias for dict.remove', function(){
+    var o = p.dict()
 
-//     a.equal(o.delete, o.remove)
-// })
+    a.equal(o.delete, o.remove)
+})
 
-// test('p.dict is a new-less constructor', function(){
-//     var o = p.dict()
+test('p.dict is a new-less constructor', function(){
+    var o = p.dict()
 
-//     a.ok(o instanceof p.dict)
-// })
+    a.ok(o instanceof p.dict)
+})
 
 
-// test('dict.transient returns a new mutable object with the same attrs', function(){
-//     var o = p.dict({ foo: 'bar' }),
-//         t = o.transient()
+test('dict.transient returns a new mutable object with the same attrs', function(){
+    var o = p.dict({ foo: 'bar' }),
+        t = o.transient()
 
-//     a.ok('foo' in t)
-//     delete t.foo
-//     a.ok(!('foo' in t))
-//     a.ok(o.has('foo'))
-// })
+    console.log(o)
+    a.ok('foo' in t)
+    delete t.foo
+    a.ok(!('foo' in t))
+    a.ok(o.has('foo'))
+})

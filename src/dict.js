@@ -14,9 +14,13 @@ var dict = u.ctor({
         }
 
         Object.freeze(this)
-        return this
+        return attrs ? this.set(attrs) : this
     },
     set: function(k, v){
+        if ( typeof k !== 'string' ) {
+            var keys = Object.keys(k)
+            return keys.reduce(function(dict, key){ return dict.set(key, k[key]) }, this)
+        }
         var t = h.set(this['-data'](secret), h.path(k), k, v)
         var ret = this.constructor()
         ret['-data'](secret, t)
@@ -26,7 +30,7 @@ var dict = u.ctor({
         return h.get(this['-data'](secret), h.path(k), k)
     },
     transient: function(){
-
+        return h.transient(this['-data'](secret))
     },
     has: function(k){
         return h.has(this['-data'](secret), h.path(k), k)
