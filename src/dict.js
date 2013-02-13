@@ -1,22 +1,32 @@
-var u    = require('./util'),
-    hash = require('string-hash')
+var u = require('./util'),
+    h = require('./hamt')
+
+var secret = {}
 
 var dict = u.ctor({
+
     constructor: function(attrs){
-        this['-data'] = Object.freeze({})
+        var store = h.Trie({})
+
+        this['-data'] = function(s, data){
+            if ( s === secret && data ) return store = data
+            else                        return store
+        }
+
         Object.freeze(this)
         return this
     },
     set: function(k, v){
-        var d = u.clone(this['-data'])
-        var h = hash(k)
+        var t = h.set(this['-data'](secret), h.path(k), k, v)
         var ret = this.constructor()
-        ret['-data'] = Object.freeze(d)
+        ret['-data'](secret, t)
         return ret
     },
     get: function(k){ },
     transient: function(){ },
-    has: function(k){ },
+    has: function(k){
+        return h.has(this['-data'](secret), h.path(k), k)
+    },
 
     remove: function(k){
         var t = this.transient()

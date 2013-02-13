@@ -16,11 +16,10 @@ test('are frozen', function(){
     a.equal(d.x, undefined)
 })
 
-test('-data is frozen', function(){
+test('-data is a function', function(){
     var d = p.dict({ })
 
-    d['-data'].x = 3
-    a.equal(d['-data'].x, undefined)
+    a.equal(typeof d['-data'], 'function')
 })
 
 
@@ -50,6 +49,7 @@ test('dict.set(k, v)', function(){
 //     var o1 = p.dict({ 'x': 3 }),
 //         o2 = o1.set('y', 3).set({ 'z': 3 })
 
+
 //     a.ok(o1.has('x'))
 //     a.ok(!o1.has('y'))
 //     a.ok(!o1.has('z'))
@@ -60,18 +60,19 @@ test('dict.set(k, v)', function(){
 // })
 
 // test('dict.get', function(){
-//     var o = p.dict({ x: 3 })
+//     var o = p.dict().set('x', 3)
+
 
 //     a.equal(o.get('x'), 3)
 //     a.equal(o.get('y'), undefined)
 // })
 
-// test('dict.has', function(){
-//     var o = p.dict({ x: 3 })
+test('dict.has', function(){
+    var o = p.dict().set('x', 3)
 
-//     a.ok(o.has('x'))
-//     a.ok(!o.has('y'))
-// })
+    a.ok(o.has('x'))
+    a.ok(!o.has('y'))
+})
 
 // test('dict.remove', function(){
 //     var o1 = p.dict({ x: 3 }),
