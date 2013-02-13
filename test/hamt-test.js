@@ -67,7 +67,6 @@ test('hashmap', function(){
     a.equal(h.get(t, [3], 'foo'), 'bar')
 })
 
-
 suite('hamt - set')
 
 test('shallow', function(){
@@ -129,6 +128,62 @@ test('overwriting deep conflict', function(){
     var expected = h.Hashmap({
         foo: h.Value('foo', 'bar', []),
         bar: h.Value('bar', 'bizz', []) })
+
+    a.deepEqual(t2, expected)
+})
+
+suite('remove')
+
+test('shallow', function(){
+    var t1 = h.Trie({ 3: h.Value('foo', 'bar', [3]) })
+    var t2 = h.remove(t1, [3, 3], 'foo')
+
+    a.deepEqual(t2, h.Trie({}))
+})
+
+test('resolves shallow conflict', function(){
+    var t1 = h.Trie({
+            3: h.Trie({
+                4: h.Value('wibble', 'quux', [4, 5]),
+                3: h.Value('foo', 'bar', [5, 6]) }) })
+
+    var t2 = h.remove(t1, [3, 4, 4, 5], 'wibble')
+
+    var expected = h.Value('foo', 'bar', [3, 3, 5, 6])
+
+    a.deepEqual(t2, expected)
+})
+
+test('resolves deep conflict', function(){
+    var t1 = h.Trie({
+            3: h.Trie({
+                5: h.Trie({
+                    4: h.Value('bar', 'quux', [5]),
+                    3: h.Value('foo', 'bar', [6]) }) }),
+            4: h.Value('baz', 'quux', [2, 3, 4]) })
+
+    var t2 = h.remove(t1, [3, 5, 4, 5], 'bar')
+
+    var expected = h.Trie({
+        3: h.Value('foo', 'bar', [5, 3, 6]),
+        4: h.Value('baz', 'quux', [2, 3, 4]) })
+
+    a.deepEqual(t2, expected)
+})
+
+test('resolves deep conflict with hashmap',  function(){
+    var t1 = h.Trie({
+            3: h.Trie({
+                5: h.Hashmap({
+                    bar: h.Value('bar', 'quux', []),
+                    foo: h.Value('foo', 'bar', []) }) }),
+            4: h.Value('baz', 'quux', [2, 3, 4]) })
+
+    var t2 = h.remove(t1, [3, 5], 'foo')
+
+    var expected = h.Trie({
+        3: h.Value('bar', 'quux', [5]),
+        4: h.Value('baz', 'quux', [2, 3, 4]) })
 
     a.deepEqual(t2, expected)
 })

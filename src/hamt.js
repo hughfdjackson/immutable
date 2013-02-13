@@ -4,12 +4,6 @@ var u = require('./util')
 var hash = require('string-hash')
 var multimethod = require('multimethod')
 
-var copyAdd = function(o, k, v){
-    o = u.clone(o)
-    o[k] = v
-    return o
-}
-
 // node, [int], string -> bool
 var has = multimethod()
     .dispatch('type')
@@ -43,6 +37,13 @@ var get = multimethod()
         if ( v ) return v.value
     })
 
+
+var copyAdd = function(o, k, v){
+    o = u.clone(o)
+    o[k] = v
+    return o
+}
+
 // node, path, string, val -> Trie
 var set = multimethod()
     .dispatch('type')
@@ -54,7 +55,8 @@ var set = multimethod()
     })
     .when('value', function(value, path, key, val){
         if ( value.key === key ) return Value(key, val, path)
-        // result shallow conflict
+
+        // resolve shallow conflict
         if ( path[0] !== value.path[0] ) {
             var cs = {}
             cs[value.path[0]] = Value(value.key, value.value, value.path.slice(1))
@@ -62,8 +64,9 @@ var set = multimethod()
             return Trie(cs)
         }
 
+        // resolve deep conflict
         if ( path.length !== 0 ) {
-            // deep conflict
+
             var val1 = Value(value.key, value.value, value.path.slice(1))
             var val2 = Value(key, val, path.slice(1))
 
@@ -72,6 +75,7 @@ var set = multimethod()
             return set(Trie(cs), value.path, value.key, value.value)
         }
 
+        // resolve empty path - store them in a hashmap
         var cs = {}
         cs[key] = Value(key, val, path)
         cs[value.key] = value
@@ -83,9 +87,37 @@ var set = multimethod()
         return Hashmap(v)
     })
 
+var copyRemove = function(o, k){
+    o = u.clone(o)
+    delete o[k]
+    return o
+}
+
 // node, path, key -> Trie
 var remove = multimethod()
     .dispatch('type')
+    .when('trie', function(trie, path, key){
+        var child = trie.children[path[0]]
+
+        var t = child      === undefined                     ? trie
+              : child.type === 'value' && child.key !== key  ? trie
+              : child.type === 'value' && child.key === key  ? Trie(copyRemove(trie.children, path[0]))
+              :                                                Trie(copyAdd(trie.children, path[0], remove(child, path.slice(1), key)))
+
+        var keys = Object.keys(t.children)
+        var child = t.children[keys[0]]
+
+        if ( keys.length === 1 && child.type === 'value' ) return Value(child.key, child.value, [+keys[0]].concat(child.path))
+        else                                               return t
+    })
+    .when('hashmap', function(map, path, key){
+        var ret = copyRemove(map.values, key)
+        var keys = Object.keys(ret)
+        var child = ret[keys[0]]
+
+        if ( keys.length === 1 ) return Value(child.key, child.value, [])
+        else                     return Hashmap(ret)
+    })
 
 
 // node ctors
