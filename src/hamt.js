@@ -50,8 +50,8 @@ var set = multimethod()
     .when('trie', function(trie, path, key, val){
         var child = trie.children[path[0]]
 
-        if ( child === undefined  )   return Trie(copyAdd(trie.children, path[0], Value(key, val, path.slice(1))))
-        if ( child.type === 'value' ) return Trie(copyAdd(trie.children, path[0], set(child, path.slice(1), key, val)))
+        if ( child === undefined  ) return Trie(copyAdd(trie.children, path[0], Value(key, val, path.slice(1))))
+        else                        return Trie(copyAdd(trie.children, path[0], set(child, path.slice(1), key, val)))
     })
     .when('value', function(value, path, key, val){
         if ( value.key === key ) return Value(key, val, path)
@@ -126,8 +126,8 @@ var transient = multimethod()
         var vals = keys.map(function(key){
             return transient(trie.children[key])
         })
-
-        return vals.reduce(u.extend)
+        if ( vals.length > 0 ) return vals.reduce(u.extend)
+        else                   return {}
     })
     .when('value', function(value){
         var o = {}
@@ -139,7 +139,8 @@ var transient = multimethod()
         var vals = keys.map(function(key){
             return transient(hashmap.values[key])
         })
-        return vals.reduce(u.extend)
+        if ( vals.length > 0 ) return vals.reduce(u.extend)
+        else                   return {}
     })
 
 // node ctors

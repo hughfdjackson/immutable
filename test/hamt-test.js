@@ -108,6 +108,21 @@ test('deep conflict', function(){
     a.deepEqual(t2, expected)
 })
 
+test('deeper conflict', function(){
+    var t1 = h.Trie({
+        3: h.Trie({
+            3: h.Value('foo', 'bar', [5, 6]) }) })
+    var t2 = h.set(t1, [3, 3, 4, 5], 'wrinkle', 'luux')
+
+    var expected = h.Trie({
+        3: h.Trie({
+            3: h.Trie({
+                    4: h.Value('wrinkle', 'luux', [5]),
+                    5: h.Value('foo', 'bar', [6]) }) }) })
+
+    a.deepEqual(t2, expected)
+})
+
 test('deepest conflict', function(){
     var t1 = h.Trie({ 3: h.Value('foo', 'bar', []) })
     var t2 = h.set(t1, [3], 'squid', 'bizz')
