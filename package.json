@@ -1,7 +1,7 @@
 {
   "name": "persistent",
   "description": "Persistent data-structures from the comfort of JavaScript - a lá clojure.",
-  "version": "0.7.0-SNAPSHOT",
+  "version": "0.7.0",
   "main": "src/persistent.js",
   "scripts": {
     "test": "mocha --ui qunit --reporter list"

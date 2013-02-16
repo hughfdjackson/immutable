@@ -1,7 +1,6 @@
 var a = require('assert')
 var h = require('../src/hamt')
 var util = require('util')
-var log = function(o){ console.log(util.inspect(o, false, null)) }
 
 
 suite('hamt - has')
