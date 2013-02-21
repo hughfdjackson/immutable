@@ -1,7 +1,7 @@
 {
   "name": "persistent",
   "description": "Persistent data-structures from the comfort of JavaScript - a lá clojure.",
-  "version": "0.7.0",
+  "version": "0.6.0",
   "main": "src/persistent.js",
   "scripts": {
     "test": "mocha --ui qunit --reporter list"
@@ -9,13 +9,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/hughfdjackson/persistent.git"
-  },
-  "dependencies": {
-    "string-hash": "1.1.0",
-    "multimethod": "0.1.0"
-  },
-  "devDependencies": {
-    "benchmark": "1.0.0"
   },
   "keywords": [],
   "author": "hughfdjackson",
