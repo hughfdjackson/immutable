@@ -4,7 +4,6 @@ var u = require('./util')
 var hash = require('string-hash')
 
 // node, [int], string -> bool
-
 var hasFns = {
     trie: function(trie, path, key){
         var child = trie.children[path[0]]

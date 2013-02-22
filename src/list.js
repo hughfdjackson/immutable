@@ -1,3 +1,5 @@
+'use strict'
+
 var u    = require('./util')
 var h    = require('./hamt')
 var dict = require('./dict')

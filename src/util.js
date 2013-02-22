@@ -1,3 +1,5 @@
+'use strict'
+
 // Internal
 var extend   = function(t, f) { for ( var p in f ) t[p] = f[p]; return t }
 var clone    = function(o){ return extend({}, o) }

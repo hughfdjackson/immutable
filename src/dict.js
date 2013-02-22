@@ -1,3 +1,5 @@
+'use strict'
+
 var h = require('./hamt')
 
 var secret = {}
