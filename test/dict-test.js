@@ -20,7 +20,6 @@ test('are frozen', function(){
 
 test('-data is a function', function(){
     var d = p.dict({ })
-
     a.equal(typeof d['-data'], 'function')
 })
 
@@ -43,8 +42,8 @@ test('dict.set(k, v)', function(){
     var o  = p.dict(),
         o2 = o.set('x', 3)
 
-    a.notEqual(o, o2)
 
+    a.notEqual(o, o2)
 })
 
 test('dict.set', function(){
