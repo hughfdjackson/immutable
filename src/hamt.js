@@ -2,40 +2,47 @@
 
 var u = require('./util')
 var hash = require('string-hash')
-var multimethod = require('multimethod')
 
 // node, [int], string -> bool
-var has = multimethod()
-    .dispatch('type')
-    .when('trie', function(trie, path, key){
+
+var hasFns = {
+    trie: function(trie, path, key){
         var child = trie.children[path[0]]
         if ( child === undefined )    return false
         if ( child.type === 'value' ) return has(child, path, key)
         if ( child.type === 'trie' )  return has(child, path.slice(1), key)
-    })
-    .when('value', function(value, path, key){
+    },
+    value: function(value, path, key){
         if ( value.key === key ) return true
         else                     return false
-    })
-    .when('hashmap', function(hashmap, path, key){})
+    },
+    hashmap: function(){}
+}
+var has = function(trie, path, key){
+    return hasFns[trie.type](trie, path, key)
+}
 
-// node, [int], string -> val
-var get = multimethod()
-    .dispatch('type')
-    .when('trie', function(trie, path, key){
+var getFns = {
+    trie: function(trie, path, key){
         var child = trie.children[path[0]]
         if ( child === undefined )    return undefined
         if ( child.type === 'value' ) return get(child, path, key)
         else                          return get(child, path.slice(1), key)
-    })
-    .when('value', function(value, path, key){
+    },
+    value: function(value, path, key){
         if ( value.key === key ) return value.value
         else                     return undefined
-    })
-    .when('hashmap', function(hashmap, path, key){
+    },
+    hashmap: function(hashmap, path, key){
         var v = hashmap.values[key]
         if ( v ) return v.value
-    })
+    }
+}
+
+// node, [int], string -> val
+var get = function(trie, path, key){
+    return getFns[trie.type](trie, path, key)
+}
 
 
 var copyAdd = function(o, k, v){
@@ -44,16 +51,14 @@ var copyAdd = function(o, k, v){
     return o
 }
 
-// node, path, string, val -> Trie
-var set = multimethod()
-    .dispatch('type')
-    .when('trie', function(trie, path, key, val){
+var setFns = {
+    trie: function(trie, path, key, val){
         var child = trie.children[path[0]]
 
         if ( child === undefined  ) return Trie(copyAdd(trie.children, path[0], Value(key, val, path.slice(1))))
         else                        return Trie(copyAdd(trie.children, path[0], set(child, path.slice(1), key, val)))
-    })
-    .when('value', function(value, path, key, val){
+    },
+    value: function(value, path, key, val){
         if ( value.key === key ) return Value(key, val, path)
 
         // resolve shallow conflict
@@ -81,11 +86,16 @@ var set = multimethod()
         cs[value.key] = value
 
         return Hashmap(cs)
-    })
-    .when('hashmap', function(hashmap, path, key, val){
+    },
+    hashmap: function(hashmap, path, key, val){
         var v = copyAdd(hashmap.values, key, Value(key, val, []))
         return Hashmap(v)
-    })
+    }
+}
+// node, path, string, val -> Trie
+var set = function(node, path, key, val){
+    return setFns[node.type](node, path, key, val)
+}
 
 var copyRemove = function(o, k){
     o = u.clone(o)
@@ -93,10 +103,8 @@ var copyRemove = function(o, k){
     return o
 }
 
-// node, path, key -> Trie
-var remove = multimethod()
-    .dispatch('type')
-    .when('trie', function(trie, path, key){
+var removeFns = {
+    trie: function(trie, path, key){
         var child = trie.children[path[0]]
 
         var t = child      === undefined                     ? trie
@@ -109,39 +117,51 @@ var remove = multimethod()
 
         if ( keys.length === 1 && child.type === 'value' ) return Value(child.key, child.value, [+keys[0]].concat(child.path))
         else                                               return t
-    })
-    .when('hashmap', function(map, path, key){
+    },
+    value: function(){},
+    hashmap: function(map, path, key){
         var ret = copyRemove(map.values, key)
         var keys = Object.keys(ret)
         var child = ret[keys[0]]
 
         if ( keys.length === 1 ) return Value(child.key, child.value, [])
         else                     return Hashmap(ret)
-    })
+    }
+}
 
-var transient = multimethod()
-    .dispatch('type')
-    .when('trie', function(trie){
+// node, path, key -> Trie
+var remove = function(node, path, key){
+    return removeFns[node.type](node, path, key)
+}
+
+
+var transientFns = {
+    trie: function(trie){
         var keys = Object.keys(trie.children)
         var vals = keys.map(function(key){
             return transient(trie.children[key])
         })
         if ( vals.length > 0 ) return vals.reduce(u.extend)
         else                   return {}
-    })
-    .when('value', function(value){
+    },
+    value: function(value){
         var o = {}
         o[value.key] = value.value
         return o
-    })
-    .when('hashmap', function(hashmap){
+    },
+    hashmap: function(hashmap){
         var keys = Object.keys(hashmap.values)
         var vals = keys.map(function(key){
             return transient(hashmap.values[key])
         })
         if ( vals.length > 0 ) return vals.reduce(u.extend)
         else                   return {}
-    })
+    }
+}
+
+var transient = function(node){
+    return transientFns[node.type](node)
+}
 
 // node ctors
 var Trie = function(children){

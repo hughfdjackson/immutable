@@ -11,8 +11,7 @@
     "url": "https://github.com/hughfdjackson/persistent.git"
   },
   "dependencies": {
-    "string-hash": "1.1.0",
-    "multimethod": "0.1.0"
+    "string-hash": "1.1.0"
   },
   "devDependencies": {
     "benchmark": "1.0.0",
