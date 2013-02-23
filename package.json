@@ -4,7 +4,8 @@
   "version": "0.8.0-SNAPSHOT",
   "main": "src/persistent.js",
   "scripts": {
-    "test": "mocha --ui qunit --reporter list"
+    "test"       : "mocha --ui qunit --reporter list",
+    "prepublish" : "browserify -e src/persistent.js -o persistent.browser.js"
   },
   "repository": {
     "type": "git",
