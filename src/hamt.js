@@ -3,7 +3,24 @@
 var u = require('./util')
 var hash = require('string-hash')
 
-// node, [int], string -> bool
+var Trie = function(children){
+    return Object.freeze({ type: 'trie', children: Object.freeze(children) })
+}
+
+var Value = function(key, value, path){
+    return Object.freeze({ type: 'value', key: key, value: value, path: path })
+}
+
+var Hashmap = function(values){
+    return Object.freeze({ type: 'hashmap', values: Object.freeze(values) })
+}
+
+
+// has :: node, [int], string -> bool
+var has = function(trie, path, key){
+    return hasFns[trie.type](trie, path, key)
+}
+
 var hasFns = {
     trie: function(trie, path, key){
         var child = trie.children[path[0]]
@@ -15,10 +32,12 @@ var hasFns = {
         if ( value.key === key ) return true
         else                     return false
     },
-    hashmap: function(){}
+    hashmap: function(){} // missing case?
 }
-var has = function(trie, path, key){
-    return hasFns[trie.type](trie, path, key)
+
+// get :: node, [int], string -> val
+var get = function(trie, path, key){
+    return getFns[trie.type](trie, path, key)
 }
 
 var getFns = {
@@ -38,16 +57,16 @@ var getFns = {
     }
 }
 
-// node, [int], string -> val
-var get = function(trie, path, key){
-    return getFns[trie.type](trie, path, key)
-}
-
 
 var copyAdd = function(o, k, v){
     o = u.clone(o)
     o[k] = v
     return o
+}
+
+// set :: node, path, string, val -> Trie
+var set = function(node, path, key, val){
+    return setFns[node.type](node, path, key, val)
 }
 
 var setFns = {
@@ -91,15 +110,16 @@ var setFns = {
         return Hashmap(v)
     }
 }
-// node, path, string, val -> Trie
-var set = function(node, path, key, val){
-    return setFns[node.type](node, path, key, val)
-}
 
 var copyRemove = function(o, k){
     o = u.clone(o)
     delete o[k]
     return o
+}
+
+// remove :: node, path, key -> Trie
+var remove = function(node, path, key){
+    return removeFns[node.type](node, path, key)
 }
 
 var removeFns = {
@@ -128,11 +148,11 @@ var removeFns = {
     }
 }
 
-// node, path, key -> Trie
-var remove = function(node, path, key){
-    return removeFns[node.type](node, path, key)
-}
 
+// transient :: node -> Object
+var transient = function(node){
+    return transientFns[node.type](node)
+}
 
 var transientFns = {
     trie: function(trie){
@@ -158,38 +178,22 @@ var transientFns = {
     }
 }
 
-var transient = function(node){
-    return transientFns[node.type](node)
-}
-
-// node ctors
-var Trie = function(children){
-    return Object.freeze({ type: 'trie', children: Object.freeze(children) })
-}
-
-var Value = function(key, value, path){
-    return Object.freeze({ type: 'value', key: key, value: value, path: path })
-}
-
-var Hashmap = function(values){
-    return Object.freeze({ type: 'hashmap', values: Object.freeze(values) })
-}
 
 // hashing operations
 
+// mask5 :: int, int -> int
 // get a <= 5 bit section of a hash, shifted from the left position
-// int, int -> int
 var mask5 = function(hash, from){ return (hash >>> from) & 0x01f }
 
+// hashPath :: int -> [int]
 // get the path from an already hashed key
-// int -> [int]
 var hashPath = function(hash){
     return splitPositions.map(mask5.bind(null, hash))
 }
 var splitPositions = [0, 5, 10, 15, 20, 25, 30]
 
+// path :: string -> [int]
 // get the maximal path to a key
-// string -> [int]
 var path =  function(k){ return hashPath(hash(k)) }
 
 module.exports = {
