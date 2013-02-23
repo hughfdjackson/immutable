@@ -1,8 +1,8 @@
 **Warning: API Unstable (even more so than most < 1.0.0 releases)**
 
-# Persistent
+# persistent
 
-Persistent data-structures from the comfort of JavaScript - a lá clojure.  Based on [Bagwell (2001)](http://lampwww.epfl.ch/papers/idealhashtrees.pdf), and [Clojure's persistent implementation of a Hash Array Mapped Trie](https://github.com/clojure/clojure/blob/master/src/jvm/clojure/lang/PersistentHashMap.java).
+persistent neatly packages immutable equivalents to JavaScript's Objects and Arrays.
 
 ## Why?
 
@@ -85,7 +85,7 @@ updated.has('foo') //= false
 o.has('foo')       //= true
 ```
 
-### .transient() -> object
+### .transient() -> Object
 
 Returns a seperate, mutable object with the same attrs.
 
@@ -105,7 +105,7 @@ o.has('foo') //= true
 
 Shares the same API as `persistent.object`, except:
 
-### persistent.transient() -> array
+### .transient() -> Array
 
 Returns a seperate, mutable array with the same attrs.
 
@@ -146,3 +146,7 @@ The following native methods work as expected for a regular array:
 * some
 * reduce
 * reduceRight
+
+## Resources
+
+Based on [Bagwell (2001)](http://lampwww.epfl.ch/papers/idealhashtrees.pdf), and [Clojure's persistent implementation of a Hash Array Mapped Trie](https://github.com/clojure/clojure/blob/master/src/jvm/clojure/lang/PersistentHashMap.java).
