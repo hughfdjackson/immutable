@@ -1,11 +1,11 @@
 'use strict'
 
-var h = require('./hamt')
+var h = require('./ht')
 
 var secret = {}
 
-var dict = module.exports = function(attrs){
-    if ( !(this instanceof dict) ) return new dict(attrs)
+var object = module.exports = function(attrs){
+    if ( !(this instanceof object) ) return new object(attrs)
 
     var store = h.Trie({})
 
@@ -18,16 +18,16 @@ var dict = module.exports = function(attrs){
     return attrs ? this.set(attrs) : this
 }
 
-dict.prototype = {
-    constructor: dict,
+object.prototype = {
+    constructor: object,
 
     set: function(k, v){
         if ( typeof k === 'object' && typeof k !== null ) {
             var keys = Object.keys(k)
-            return keys.reduce(function(dict, key){ return dict.set(key, k[key]) }, this)
+            return keys.reduce(function(object, key){ return object.set(key, k[key]) }, this)
         }
         var t = h.set(this['-data'](secret), h.path(k), k, v)
-        var ret = new dict()
+        var ret = new object()
         ret['-data'](secret, t)
         return ret
     },
@@ -47,9 +47,9 @@ dict.prototype = {
 
     remove: function(k){
         var t = h.remove(this['-data'](secret), h.path(k), k)
-        var ret = new dict()
+        var ret = new object()
         ret['-data'](secret, t)
         return ret
     }
 }
-dict.prototype['delete'] = dict.prototype.remove
+object.prototype['delete'] = object.prototype.remove

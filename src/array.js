@@ -1,14 +1,14 @@
 'use strict'
 
 var u    = require('./util')
-var h    = require('./hamt')
-var dict = require('./dict')
+var h    = require('./ht')
+var object = require('./object')
 
 
 var secret = {}
 
-var list = function(attrs){
-    if ( !(this instanceof list) ) return new list(attrs)
+var array = function(attrs){
+    if ( !(this instanceof array) ) return new array(attrs)
 
     var store = h.Trie({})
 
@@ -19,24 +19,29 @@ var list = function(attrs){
     return attrs ? this.set(attrs) : this
 }
 
-list.prototype = {
-    constructor: list,
+array.prototype = {
+
+    constructor: array,
+
+    // stealing from object
+    get: object.prototype.get,
+    "delete": object.prototype.remove,
+    remove: object.prototype.remove,
+
+
     set: function(k, v){
         if ( typeof k === 'object' && typeof k !== null ) {
             var keys = Object.keys(k)
-            return keys.reduce(function(dict, key){ return dict.set(key, k[key]) }, this)
+            return keys.reduce(function(object, key){ return object.set(key, k[key]) }, this)
         }
         var t = h.set(this['-data'](secret), h.path(k), k, v)
-        var ret = new list()
+        var ret = new array()
         ret['-data'](secret, t)
 
         ret.length = this.length > k ? this.length  : parseInt(k, 10) + 1
         Object.freeze(this)
         return ret
     },
-    get: dict.prototype.get,
-    "delete": dict.prototype.remove,
-    remove: dict.prototype.remove,
 
     transient: function(){
         return u.extend([], h.transient(this['-data'](secret)))
@@ -49,14 +54,14 @@ list.prototype = {
         return this.slice(0, -1)
     },
     unshift: function(){
-        return new list(u.slice(arguments)).concat(this.transient())
+        return new array(u.slice(arguments)).concat(this.transient())
     },
     shift: function(){
         return this.slice(1, this.length)
     },
     concat: function(a){
-        if ( a instanceof list ) return this.concat(a.transient())
-        else                     return new list(this.transient().concat(a))
+        if ( a instanceof array ) return this.concat(a.transient())
+        else                     return new array(this.transient().concat(a))
     }
 }
 
@@ -73,12 +78,12 @@ var wrapPrim = function(fn){
 var wrapArr = function(fn){
     return function(){
         var t = this.transient()
-        return new list(fn.apply(t, arguments))
+        return new array(fn.apply(t, arguments))
     }
 }
 
-u.extend(list.prototype, u.mapObj(retPrim, wrapPrim))
-u.extend(list.prototype, u.mapObj(retAny, wrapPrim))
-u.extend(list.prototype, u.mapObj(retArr, wrapArr))
+u.extend(array.prototype, u.mapObj(retPrim, wrapPrim))
+u.extend(array.prototype, u.mapObj(retAny, wrapPrim))
+u.extend(array.prototype, u.mapObj(retArr, wrapArr))
 
-module.exports = list
+module.exports = array

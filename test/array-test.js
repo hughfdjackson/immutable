@@ -1,41 +1,41 @@
 var a = require('assert'),
     p = require('..')
 
-suite('p.list')
+suite('p.array')
 
 test('has right constructor', function(){
-    a.equal(p.list.prototype.constructor, p.list)
+    a.equal(p.array.prototype.constructor, p.array)
 })
 
 // test('it is frozen', function(){
-//     var arr = p.list([])
+//     var arr = p.array([])
 
 //     arr.x = 4
 //     a.equal(arr.x, undefined)
 // })
 
 test('-data is a function', function(){
-    var arr = p.list([])
+    var arr = p.array([])
     a.equal(typeof arr['-data'], 'function')
 })
 
-test('takes p.dict\'s methods', function(){
-    var arr  = p.list(),
-        dict = p.dict()
+test('takes p.object\'s methods', function(){
+    var arr  = p.array(),
+        object = p.object()
 
-    a.equal(arr.get, dict.get)
-    a.equal(arr.remove, dict.remove)
-    a.equal(arr['delete'], dict['delete'])
+    a.equal(arr.get, object.get)
+    a.equal(arr.remove, object.remove)
+    a.equal(arr['delete'], object['delete'])
 })
 
-test('list.set returns list', function(){
-    var arr = p.list().set(1, '2').set({ x: 3 }).set([1, 2, 3])
+test('array.set returns array', function(){
+    var arr = p.array().set(1, '2').set({ x: 3 }).set([1, 2, 3])
 
-    a.ok(arr instanceof p.list)
+    a.ok(arr instanceof p.array)
 })
 
-test('list.transient returns list with *all* props copied', function(){
-    var arr = p.list({ x: 3, 0: 1, 2: 3 }).transient()
+test('array.transient returns array with *all* props copied', function(){
+    var arr = p.array({ x: 3, 0: 1, 2: 3 }).transient()
 
     a.equal(arr[0], 1)
     a.equal(arr[2], 3)
@@ -46,7 +46,7 @@ test('list.transient returns list with *all* props copied', function(){
 })
 
 test('push', function(){
-    var arr = p.list([1, 2, 3])
+    var arr = p.array([1, 2, 3])
 
     arr.push(4, 5, 6)
     a.deepEqual(arr.transient(), [1, 2, 3])
@@ -56,7 +56,7 @@ test('push', function(){
 })
 
 test('pop', function(){
-    var arr = p.list([1, 2, 3])
+    var arr = p.array([1, 2, 3])
 
     arr.pop()
     a.deepEqual(arr.transient(), [1, 2, 3])
@@ -64,7 +64,7 @@ test('pop', function(){
     arr = arr.pop()
     a.deepEqual(arr.transient(), [1, 2])
 
-    arr = p.list([])
+    arr = p.array([])
     arr = arr.pop()
 
     a.deepEqual(arr.transient(), [])
@@ -72,7 +72,7 @@ test('pop', function(){
 
 
 test('unshift', function(){
-    var arr = p.list([1, 2, 3])
+    var arr = p.array([1, 2, 3])
 
     arr.unshift(4, 5, 6)
     a.deepEqual(arr.transient(), [1, 2, 3])
@@ -82,7 +82,7 @@ test('unshift', function(){
 })
 
 test('shift', function(){
-    var arr = p.list([1, 2, 3])
+    var arr = p.array([1, 2, 3])
 
     arr.shift()
     a.deepEqual(arr.transient(), [1, 2, 3])
@@ -90,14 +90,14 @@ test('shift', function(){
     arr = arr.shift()
     a.deepEqual(arr.transient(), [2, 3])
 
-    arr = p.list([])
+    arr = p.array([])
     arr = arr.shift()
 
     a.deepEqual(arr.transient(), [])
 })
 
 test('concat', function(){
-    var arr = p.list([1, 2, 3]),
+    var arr = p.array([1, 2, 3]),
         res = arr.concat([4, 5, 6])
 
     a.deepEqual(res.transient(), [1, 2, 3, 4, 5, 6])
@@ -107,7 +107,7 @@ test('concat', function(){
 })
 
 test('length', function(){
-    var arr = p.list([1, 2, 3])
+    var arr = p.array([1, 2, 3])
 
     a.equal(arr.length, 3)
 
@@ -120,7 +120,7 @@ test('length', function(){
 
 
 test('wraps all native methods', function(){
-    var assertNotSameAsPrototype = function(name){ a.notEqual(p.list.prototype[name], Array.prototype[name]) }
+    var assertNotSameAsPrototype = function(name){ a.notEqual(p.array.prototype[name], Array.prototype[name]) }
 
     ;["toString", "toLocaleString", "join", "pop", "push", "concat", "reverse", "slice",
      "splice", "sort", "filter", "forEach", "some", "every", "map", "indexOf", "lastIndexOf",
@@ -128,19 +128,19 @@ test('wraps all native methods', function(){
 })
 
 
-test('.filter - an object returning wrapped method - rewraps in p.list', function(){
-    var arr = p.list([1, 2, 3]),
+test('.filter - an object returning wrapped method - rewraps in p.array', function(){
+    var arr = p.array([1, 2, 3]),
         odd = function(n){ return n % 2 !== 0 },
         res = arr.filter(odd)
 
-    a.ok(res instanceof p.list)
+    a.ok(res instanceof p.array)
 
     a.ok(arr.get(1), 2)
     a.ok(res.get(1), undefined)
 })
 
 test('.every - a non-object returning wrapped method', function(){
-    var arr = p.list([1, 2, 3]),
+    var arr = p.array([1, 2, 3]),
         odd = function(n){ return n % 2 !== 0 }
 
     a.equal(arr.every(odd), false)
@@ -148,11 +148,11 @@ test('.every - a non-object returning wrapped method', function(){
 })
 
 test('.reduce and .reduceRight return the same type', function(){
-    var arr = p.list([1, 2, 3])
+    var arr = p.array([1, 2, 3])
 
     var res = arr.reduce(function(arr, i) { arr.push(i + 1); return arr }, [])
-    a.ok(!(res instanceof p.list))
+    a.ok(!(res instanceof p.array))
 
     res = arr.reduceRight(function(arr, i) { arr.push(i + 1); return arr }, [])
-    a.ok(!(res instanceof p.list))
+    a.ok(!(res instanceof p.array))
 })

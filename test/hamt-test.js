@@ -1,5 +1,5 @@
 var a = require('assert')
-var h = require('../src/hamt')
+var h = require('../src/ht')
 var util = require('util')
 
 

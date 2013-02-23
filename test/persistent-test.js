@@ -3,7 +3,7 @@ var a = require('assert'),
 
 suite('persist')
 
-test('exports the right parts', function(){
-    a.equal(p.dict, require('../src/dict'))
-    a.equal(p.list, require('../src/list'))
+test('exports API', function(){
+    a.equal(p.object, require('../src/object'))
+    a.equal(p.array, require('../src/array'))
 })

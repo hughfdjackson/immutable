@@ -1,53 +1,50 @@
 var a = require('assert')
 var p = require('..')
-var h = require('../src/hamt')
-var util = require('util')
 
-suite('p.dict')
+suite('p.object')
 
 test('has right constructor', function(){
-    a.equal(p.dict.prototype.constructor, p.dict)
+    a.equal(p.object.prototype.constructor, p.object)
 })
 
-suite('p.dicts')
+suite('p.objects')
 
 test('are frozen', function(){
-    var d = p.dict({ })
+    var d = p.object({ })
 
     d.x = 3
     a.equal(d.x, undefined)
 })
 
 test('-data is a function', function(){
-    var d = p.dict({ })
+    var d = p.object({ })
     a.equal(typeof d['-data'], 'function')
 })
 
 
-test('dict()', function(){
-    var o = p.dict()
+test('object()', function(){
+    var o = p.object()
     a.ok(o)
 })
 
-test('dict(Object)', function(){
+test('object(Object)', function(){
     var opts = { x: 1, y: 2 },
-        o = p.dict(opts)
+        o = p.object(opts)
 
     a.ok(o.has('x'))
     delete opts.x
     a.ok(o.has('x'))
 })
 
-test('dict.set(k, v)', function(){
-    var o  = p.dict(),
+test('object.set(k, v)', function(){
+    var o  = p.object(),
         o2 = o.set('x', 3)
-
 
     a.notEqual(o, o2)
 })
 
-test('dict.set', function(){
-    var o1 = p.dict({ 'x': 3 }),
+test('object.set', function(){
+    var o1 = p.object({ 'x': 3 }),
         o2 = o1.set('y', 3).set({ 'z': 3 })
 
     a.ok(o1.has('x'))
@@ -59,44 +56,40 @@ test('dict.set', function(){
     a.ok(o2.has('z'))
 })
 
-test('dict.get', function(){
-    var o = p.dict().set('x', 3)
+test('object.get', function(){
+    var o = p.object().set('x', 3)
 
     a.equal(o.get('x'), 3)
     a.equal(o.get('y'), undefined)
 })
 
-test('dict.has', function(){
-    var o = p.dict().set('x', 3)
+test('object.has', function(){
+    var o = p.object().set('x', 3)
 
     a.ok(o.has('x'))
     a.ok(!o.has('y'))
 })
 
-test('dict.remove', function(){
-    var o1 = p.dict().set('x', 3),
+test('object.remove', function(){
+    var o1 = p.object().set('x', 3),
         o2 = o1.remove('x')
 
     a.ok(o1.has('x'))
     a.ok(!o2.has('x'))
 })
 
-
-test('dict.delete alias for dict.remove', function(){
-    var o = p.dict()
-
+test('object.delete alias for object.remove', function(){
+    var o = p.object()
     a.equal(o.delete, o.remove)
 })
 
-test('p.dict is a new-less constructor', function(){
-    var o = p.dict()
-
-    a.ok(o instanceof p.dict)
+test('p.object is a new-less constructor', function(){
+    a.ok(p.object() instanceof p.object)
 })
 
 
-test('dict.transient returns a new mutable object with the same attrs', function(){
-    var o = p.dict({ foo: 'bar' }),
+test('object.transient returns a new mutable object with the same attrs', function(){
+    var o = p.object({ foo: 'bar' }),
         t = o.transient()
 
     a.ok('foo' in t)
@@ -121,7 +114,7 @@ test('set, get, transient and remove', function(){
 
     var o = vals.reduce(function(o, v){
         return o.set(v)
-    }, p.dict())
+    }, p.object())
 
     var t = o.transient()
 

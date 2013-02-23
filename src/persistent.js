@@ -1,6 +1,6 @@
 'use strict'
 
 module.exports = {
-    dict: require('./dict'),
-    list: require('./list')
+    object: require('./object'),
+    array: require('./array')
 }
