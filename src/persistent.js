@@ -2,5 +2,7 @@
 
 module.exports = {
     object: require('./object'),
-    array: require('./array')
+    obj: require('./object'),
+    array: require('./array'),
+    arr: require('./array')
 }
