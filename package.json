@@ -4,7 +4,7 @@
   "version": "0.8.0-SNAPSHOT",
   "main": "src/persistent.js",
   "scripts": {
-    "test"       : "mocha --ui qunit --reporter list",
+    "test"       : "node test/runner.js test/",
     "prepublish" : "browserify -e src/persistent.js -o persistent.browser.js"
   },
   "repository": {
@@ -16,7 +16,8 @@
   },
   "devDependencies": {
     "benchmark": "1.0.0",
-    "underscore": "*"
+    "underscore": "*",
+    "mocha": "1.8.1"
   },
   "keywords": [],
   "author": "hughfdjackson",
