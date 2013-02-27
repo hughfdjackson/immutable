@@ -20,13 +20,21 @@
     },
     "testling": {
         "files": "test/*-test.js",
-        "browsers": {
-            "ie": [ 7, 8, 9 ],
-            "firefox": [ 3, 13 ],
-            "chrome": [ 10, 20 ],
-            "safari": [ 5.1 ],
-            "opera": [ 10, 12 ]
-        },
+        "browsers": [
+            "iexplore/6.0",
+            "iexplore/7.0",
+            "iexplore/8.0",
+            "iexplore/9.0",
+            "iexplore/10.0",
+            "chrome/4.0",
+            "chrome/23.0",
+            "firefox/3.0",
+            "firefox/17.0",
+            "opera/10.0",
+            "opera/12.0",
+            "safari/5.0.5",
+            "safari/5.1"
+        ]
         "harness": "mocha-qunit"
     },
     "keywords": [
