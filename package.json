@@ -21,11 +21,11 @@
     "testling": {
         "files": "test/*-test.js",
         "browsers": {
-            "ie": [ 8, 9 ],
-            "firefox": [ 13 ],
-            "chrome": [ 20 ],
+            "ie": [ 7, 8, 9 ],
+            "firefox": [ 3, 13 ],
+            "chrome": [ 10, 20 ],
             "safari": [ 5.1 ],
-            "opera": [ 12 ]
+            "opera": [ 10, 12 ]
         },
         "harness": "mocha-qunit"
     },
