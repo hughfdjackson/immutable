@@ -150,3 +150,8 @@ The following native methods work as expected for a regular array:
 ## Resources
 
 Based on [Bagwell (2001)](http://lampwww.epfl.ch/papers/idealhashtrees.pdf), and [Clojure's persistent implementation of a Hash Array Mapped Trie](https://github.com/clojure/clojure/blob/master/src/jvm/clojure/lang/PersistentHashMap.java).
+
+## Tests
+
+Tests are run via testling:
+[![browser support](http://ci.testling.com/hughfdjackson/persistent.png)](http://ci.testling.com/hughfdjackson/persistent)

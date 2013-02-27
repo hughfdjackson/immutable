@@ -1,25 +1,38 @@
 {
-  "name": "persistent",
-  "description": "Persistent data-structures from the comfort of JavaScript - a lá clojure.",
-  "version": "0.8.0-SNAPSHOT",
-  "main": "src/persistent.js",
-  "scripts": {
-    "test"       : "node test/runner.js test/",
-    "prepublish" : "browserify -e src/persistent.js -o persistent.browser.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/hughfdjackson/persistent.git"
-  },
-  "dependencies": {
-    "string-hash": "1.1.0"
-  },
-  "devDependencies": {
-    "benchmark": "1.0.0",
-    "underscore": "*",
-    "mocha": "1.8.1"
-  },
-  "keywords": [],
-  "author": "hughfdjackson",
-  "license": "BSD"
+    "name": "persistent",
+    "description": "Persistent data-structures from the comfort of JavaScript - a lá clojure.",
+    "version": "0.8.0-SNAPSHOT",
+    "main": "src/persistent.js",
+    "scripts": {
+        "test"       : "node test/runner.js test/"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hughfdjackson/persistent.git"
+    },
+    "dependencies": {
+        "string-hash": "1.1.0"
+    },
+    "devDependencies": {
+        "benchmark": "1.0.0",
+        "underscore": "*",
+        "mocha": "1.8.1"
+    },
+    "testling": {
+        "files": "test/runner.js",
+        "browsers": {
+            "ie": [ 8, 9 ],
+            "firefox": [ 13 ],
+            "chrome": [ 20 ],
+            "safari": [ 5.1 ],
+            "opera": [ 12 ]
+        }
+    },
+    "keywords": [
+        "immutability",
+        "functional programming",
+        "persistent datasctures"
+    ],
+    "author": "hughfdjackson",
+    "license": "BSD"
 }
