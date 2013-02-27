@@ -154,4 +154,5 @@ Based on [Bagwell (2001)](http://lampwww.epfl.ch/papers/idealhashtrees.pdf), and
 ## Tests
 
 Tests are run via testling:
+
 [![browser support](http://ci.testling.com/hughfdjackson/persistent.png)](http://ci.testling.com/hughfdjackson/persistent)
