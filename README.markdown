@@ -8,6 +8,14 @@ persistent neatly packages immutable equivalents to JavaScript's Objects and Arr
 
 Mutability causes headaches; immutability soothes them.  JavaScript's Object and Array are crying out for immutable counterparts to complement first-class functions.
 
+
+## Support
+
+Current support is limited to ECMAScript 5 compliant environments; although ECMAScript 3 compliance [is a goal of this project](https://github.com/hughfdjackson/persistent/issues/7).
+
+
+[![browser support](http://ci.testling.com/hughfdjackson/persistent.png)](http://ci.testling.com/hughfdjackson/persistent)
+
 ## Example
 
 ```javascript
@@ -150,10 +158,3 @@ The following native methods work as expected for a regular array:
 ## Resources
 
 Based on [Bagwell (2001)](http://lampwww.epfl.ch/papers/idealhashtrees.pdf), and [Clojure's persistent implementation of a Hash Array Mapped Trie](https://github.com/clojure/clojure/blob/master/src/jvm/clojure/lang/PersistentHashMap.java).
-
-## Support
-
-Current support is limited to ECMAScript 5 compliant environments; although ECMAScript 3 compliance [is a goal of this project](https://github.com/hughfdjackson/persistent/issues/7).
-
-
-[![browser support](http://ci.testling.com/hughfdjackson/persistent.png)](http://ci.testling.com/hughfdjackson/persistent)
