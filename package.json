@@ -1,14 +1,14 @@
 {
-    "name": "persistent",
-    "description": "Persistent data-structures from the comfort of JavaScript - a lá clojure.",
+    "name": "immutable",
+    "description": "immutable data-structures in javascript.",
     "version": "0.8.0-SNAPSHOT",
-    "main": "src/persistent.js",
+    "main": "src/immutable.js",
     "scripts": {
         "test"       : "node test/runner.js test/"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/hughfdjackson/persistent.git"
+        "url": "https://github.com/hughfdjackson/immutable.git"
     },
     "dependencies": {
         "string-hash": "1.1.0"
@@ -40,7 +40,7 @@
     "keywords": [
         "immutability",
         "functional programming",
-        "persistent datasctures"
+        "persistent datastructures"
     ],
     "author": "hughfdjackson",
     "license": "BSD"
