@@ -1,7 +1,7 @@
 {
     "name": "immutable",
     "description": "immutable data-structures in javascript.",
-    "version": "0.8.0-SNAPSHOT",
+    "version": "0.8.0",
     "main": "src/immutable.js",
     "scripts": {
         "test"       : "node test/runner.js test/"
