@@ -22,7 +22,7 @@ Current support is limited to ECMAScript 5 compliant environments; although ECMA
 var i = require('immutable'),
     person = i.object({ firstName: 'hugh', secondName: 'jackson' })
 
-var personWithAge = person.set({ age: 24 })
+var personWithAge = person.assoc({ age: 24 })
 
 person.has('age')          //= false
 personWithAge.has('age')   //= true
@@ -35,7 +35,7 @@ personWithAge.get('age')   //= 24
 
 ## immutable.object([Object]) -> object
 
-Creates an empty object, or sets the attributes if an object is passed.
+Creates an empty object, or assocs the attributes if an object is passed.
 
 ```javascript
 var o = i.object()
@@ -44,14 +44,14 @@ var o = i.object()
 var you = i.object({ wise: true, willUseThisLib: true })
 ```
 
-### .set(String, Value) OR .set(Object) -> object
+### .assoc(String, Value) OR .assoc(Object) -> object
 
 Returns a new object with the additional attribute(s).
 
 ```javascript
 var o = i.object()
 
-var changed = o.set('x', 3).set({ y: 4, z: 5 })
+var changed = o.assoc('x', 3).assoc({ y: 4, z: 5 })
 
 changed.has('x') //= true
 changed.get('y') //= 4
@@ -78,7 +78,7 @@ o.has('x') //= true
 o.has('z') //= false
 ```
 
-### .remove(String) `alias: .delete(String)` -> object
+### .dissoc(String) -> object
 
 Returns a new `object` with the key removed.
 
@@ -88,7 +88,7 @@ var o = i.object({
     baz: 'quux'
 })
 
-var updated = o.remove('foo').remove('baz')
+var updated = o.dissoc('foo').dissoc('baz')
 updated.has('foo') //= false
 o.has('foo')       //= true
 ```

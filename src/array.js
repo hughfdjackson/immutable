@@ -16,7 +16,7 @@ var array = function(attrs){
         if ( s === secret && data ) return store = data
         else                        return store
     }
-    return attrs ? this.set(attrs) : this
+    return attrs ? this.assoc(attrs) : this
 }
 
 array.prototype = {
@@ -24,15 +24,12 @@ array.prototype = {
     constructor: array,
 
     // stealing from object
-    get: object.prototype.get,
-    "delete": object.prototype.remove,
-    remove: object.prototype.remove,
 
 
-    set: function(k, v){
+    assoc: function(k, v){
         if ( typeof k === 'object' && typeof k !== null ) {
             var keys = Object.keys(k)
-            return keys.reduce(function(object, key){ return object.set(key, k[key]) }, this)
+            return keys.reduce(function(object, key){ return object.assoc(key, k[key]) }, this)
         }
         var t = p.assoc(this['-data'](secret), k, v)
         var ret = new array()
@@ -42,6 +39,11 @@ array.prototype = {
         Object.freeze(this)
         return ret
     },
+
+    dissoc: object.prototype.dissoc,
+
+    get: object.prototype.get,
+    has: object.prototype.has,
 
     transient: function(){
         return u.extend([], p.transient(this['-data'](secret)))

@@ -15,18 +15,25 @@ var object = module.exports = function(attrs){
     }
 
     Object.freeze(this)
-    return attrs ? this.set(attrs) : this
+    return attrs ? this.assoc(attrs) : this
 }
 
 object.prototype = {
     constructor: object,
 
-    set: function(k, v){
+    assoc: function(k, v){
         if ( typeof k === 'object' && typeof k !== null ) {
             var keys = Object.keys(k)
-            return keys.reduce(function(object, key){ return object.set(key, k[key]) }, this)
+            return keys.reduce(function(object, key){ return object.assoc(key, k[key]) }, this)
         }
         var t = p.assoc(this['-data'](secret), k, v)
+        var ret = new object()
+        ret['-data'](secret, t)
+        return ret
+    },
+
+    dissoc: function(k){
+        var t = p.dissoc(this['-data'](secret), k)
         var ret = new object()
         ret['-data'](secret, t)
         return ret
@@ -37,20 +44,12 @@ object.prototype = {
         return p.get(this['-data'](secret), k)
     },
 
-    transient: function(){
-        return p.transient(this['-data'](secret))
-    },
-
     has: function(k){
         return p.has(this['-data'](secret), k)
     },
 
-    remove: function(k){
-        var t = p.dissoc(this['-data'](secret), k)
-        var ret = new object()
-        ret['-data'](secret, t)
-        return ret
+    transient: function(){
+        return p.transient(this['-data'](secret))
     }
 }
 
-object.prototype['delete'] = object.prototype.remove

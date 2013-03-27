@@ -7,13 +7,6 @@ test('has right constructor', function(){
     a.equal(p.array.prototype.constructor, p.array)
 })
 
-// test('it is frozen', function(){
-//     var arr = p.array([])
-
-//     arr.x = 4
-//     a.equal(arr.x, undefined)
-// })
-
 test('-data is a function', function(){
     var arr = p.array([])
     a.equal(typeof arr['-data'], 'function')
@@ -24,12 +17,12 @@ test('takes p.object\'s methods', function(){
         object = p.object()
 
     a.equal(arr.get, object.get)
-    a.equal(arr.remove, object.remove)
-    a.equal(arr['delete'], object['delete'])
+    a.equal(arr.has, object.has)
+    a.equal(arr.dissoc, object.dissoc)
 })
 
-test('array.set returns array', function(){
-    var arr = p.array().set(1, '2').set({ x: 3 }).set([1, 2, 3])
+test('array.assoc returns array', function(){
+    var arr = p.array().assoc(1, '2').assoc({ x: 3 }).assoc([1, 2, 3])
 
     a.ok(arr instanceof p.array)
 })
@@ -114,7 +107,7 @@ test('length', function(){
     arr = arr.push(1)
     a.equal(arr.length, 4)
 
-    arr = arr.set(100, 3)
+    arr = arr.assoc(100, 3)
     a.equal(arr.length, 101)
 })
 
