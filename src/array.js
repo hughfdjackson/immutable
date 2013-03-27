@@ -1,16 +1,16 @@
 'use strict'
 
 var u    = require('./util')
-var h    = require('./ht')
 var object = require('./object')
 
+var p = require('persistent-hash-trie')
 
 var secret = {}
 
 var array = function(attrs){
     if ( !(this instanceof array) ) return new array(attrs)
 
-    var store = h.Trie({})
+    var store = p.Trie({})
 
     this['-data'] = function(s, data){
         if ( s === secret && data ) return store = data
@@ -34,7 +34,7 @@ array.prototype = {
             var keys = Object.keys(k)
             return keys.reduce(function(object, key){ return object.set(key, k[key]) }, this)
         }
-        var t = h.set(this['-data'](secret), h.path(k), k, v)
+        var t = p.assoc(this['-data'](secret), k, v)
         var ret = new array()
         ret['-data'](secret, t)
 
@@ -44,7 +44,7 @@ array.prototype = {
     },
 
     transient: function(){
-        return u.extend([], h.transient(this['-data'](secret)))
+        return u.extend([], p.transient(this['-data'](secret)))
     },
     push: function(){
         var args = u.slice(arguments)

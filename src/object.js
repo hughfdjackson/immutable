@@ -1,13 +1,13 @@
 'use strict'
 
-var h = require('./ht')
+var p = require('persistent-hash-trie')
 
 var secret = {}
 
 var object = module.exports = function(attrs){
     if ( !(this instanceof object) ) return new object(attrs)
 
-    var store = h.Trie({})
+    var store = p.Trie()
 
     this['-data'] = function(s, data){
         if ( s === secret && data ) return store = data
@@ -26,7 +26,7 @@ object.prototype = {
             var keys = Object.keys(k)
             return keys.reduce(function(object, key){ return object.set(key, k[key]) }, this)
         }
-        var t = h.set(this['-data'](secret), h.path(k), k, v)
+        var t = p.assoc(this['-data'](secret), k, v)
         var ret = new object()
         ret['-data'](secret, t)
         return ret
@@ -34,22 +34,23 @@ object.prototype = {
 
     get: function(k){
         k = k.toString()
-        return h.get(this['-data'](secret), h.path(k), k)
+        return p.get(this['-data'](secret), k)
     },
 
     transient: function(){
-        return h.transient(this['-data'](secret))
+        return p.transient(this['-data'](secret))
     },
 
     has: function(k){
-        return h.has(this['-data'](secret), h.path(k), k)
+        return p.has(this['-data'](secret), k)
     },
 
     remove: function(k){
-        var t = h.remove(this['-data'](secret), h.path(k), k)
+        var t = p.dissoc(this['-data'](secret), k)
         var ret = new object()
         ret['-data'](secret, t)
         return ret
     }
 }
+
 object.prototype['delete'] = object.prototype.remove

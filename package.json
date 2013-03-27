@@ -11,7 +11,8 @@
         "url": "https://github.com/hughfdjackson/immutable.git"
     },
     "dependencies": {
-        "string-hash": "1.1.0"
+        "string-hash": "1.1.0",
+        "persistent-hash-trie": "0.2.x"
     },
     "devDependencies": {
         "benchmark": "1.0.0",
