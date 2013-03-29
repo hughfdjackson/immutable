@@ -1,7 +1,7 @@
 {
     "name": "immutable",
     "description": "immutable data-structures in javascript.",
-    "version": "0.8.0",
+    "version": "0.8.1",
     "main": "src/immutable.js",
     "scripts": {
         "test"       : "node test/runner.js test/"
@@ -12,7 +12,7 @@
     },
     "dependencies": {
         "string-hash": "1.1.0",
-        "persistent-hash-trie": "0.2.x"
+        "persistent-hash-trie": "0.3.x"
     },
     "devDependencies": {
         "benchmark": "1.0.0",

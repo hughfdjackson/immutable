@@ -46,7 +46,7 @@ array.prototype = {
     has: object.prototype.has,
 
     transient: function(){
-        return u.extend([], p.transient(this['-data'](secret)))
+        return u.extend([], p.mutable(this['-data'](secret)))
     },
     push: function(){
         var args = u.slice(arguments)

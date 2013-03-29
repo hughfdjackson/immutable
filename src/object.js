@@ -49,7 +49,7 @@ object.prototype = {
     },
 
     transient: function(){
-        return p.transient(this['-data'](secret))
+        return p.mutable(this['-data'](secret))
     }
 }
 
