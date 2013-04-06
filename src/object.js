@@ -48,7 +48,7 @@ object.prototype = {
         return p.has(this['-data'](secret), k)
     },
 
-    transient: function(){
+    mutable: function(){
         return p.mutable(this['-data'](secret))
     }
 }

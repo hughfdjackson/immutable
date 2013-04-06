@@ -93,7 +93,7 @@ updated.has('foo') //= false
 o.has('foo')       //= true
 ```
 
-### .transient() -> Object
+### .mutable() -> Object
 
 Returns a seperate, mutable object with the same attrs.
 
@@ -103,7 +103,7 @@ var o = i.object({
     baz: 'quux'
 })
 
-var trans = o.transient()
+var trans = o.mutable()
 delete trans.foo
 
 o.has('foo') //= true
@@ -113,13 +113,13 @@ o.has('foo') //= true
 
 Shares the same API as `immutable.object`, except:
 
-### .transient() -> Array
+### .mutable() -> Array
 
 Returns a seperate, mutable array with the same attrs.
 
 ```javascript
 var arr1 = i.array([1, 2, 3]),
-    arr2 = arr1.transient()
+    arr2 = arr1.mutable()
 
 arr2.splice(1)
 

@@ -27,8 +27,8 @@ test('array.assoc returns array', function(){
     a.ok(arr instanceof p.array)
 })
 
-test('array.transient returns array with *all* props copied', function(){
-    var arr = p.array({ x: 3, 0: 1, 2: 3 }).transient()
+test('array.mutable returns array with *all* props copied', function(){
+    var arr = p.array({ x: 3, 0: 1, 2: 3 }).mutable()
 
     a.equal(arr[0], 1)
     a.equal(arr[2], 3)
@@ -42,25 +42,25 @@ test('push', function(){
     var arr = p.array([1, 2, 3])
 
     arr.push(4, 5, 6)
-    a.deepEqual(arr.transient(), [1, 2, 3])
+    a.deepEqual(arr.mutable(), [1, 2, 3])
 
     arr = arr.push(4, 5, 6)
-    a.deepEqual(arr.transient(), [1, 2, 3, 4, 5, 6])
+    a.deepEqual(arr.mutable(), [1, 2, 3, 4, 5, 6])
 })
 
 test('pop', function(){
     var arr = p.array([1, 2, 3])
 
     arr.pop()
-    a.deepEqual(arr.transient(), [1, 2, 3])
+    a.deepEqual(arr.mutable(), [1, 2, 3])
 
     arr = arr.pop()
-    a.deepEqual(arr.transient(), [1, 2])
+    a.deepEqual(arr.mutable(), [1, 2])
 
     arr = p.array([])
     arr = arr.pop()
 
-    a.deepEqual(arr.transient(), [])
+    a.deepEqual(arr.mutable(), [])
 })
 
 
@@ -68,35 +68,35 @@ test('unshift', function(){
     var arr = p.array([1, 2, 3])
 
     arr.unshift(4, 5, 6)
-    a.deepEqual(arr.transient(), [1, 2, 3])
+    a.deepEqual(arr.mutable(), [1, 2, 3])
 
     arr = arr.unshift(4, 5, 6)
-    a.deepEqual(arr.transient(), [4, 5, 6, 1, 2, 3])
+    a.deepEqual(arr.mutable(), [4, 5, 6, 1, 2, 3])
 })
 
 test('shift', function(){
     var arr = p.array([1, 2, 3])
 
     arr.shift()
-    a.deepEqual(arr.transient(), [1, 2, 3])
+    a.deepEqual(arr.mutable(), [1, 2, 3])
 
     arr = arr.shift()
-    a.deepEqual(arr.transient(), [2, 3])
+    a.deepEqual(arr.mutable(), [2, 3])
 
     arr = p.array([])
     arr = arr.shift()
 
-    a.deepEqual(arr.transient(), [])
+    a.deepEqual(arr.mutable(), [])
 })
 
 test('concat', function(){
     var arr = p.array([1, 2, 3]),
         res = arr.concat([4, 5, 6])
 
-    a.deepEqual(res.transient(), [1, 2, 3, 4, 5, 6])
+    a.deepEqual(res.mutable(), [1, 2, 3, 4, 5, 6])
 
     res = arr.concat(arr)
-    a.deepEqual(res.transient(), [1, 2, 3, 1, 2, 3])
+    a.deepEqual(res.mutable(), [1, 2, 3, 1, 2, 3])
 })
 
 test('length', function(){

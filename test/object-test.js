@@ -88,9 +88,9 @@ test('p.object is a new-less constructor', function(){
 })
 
 
-test('object.transient returns a new mutable object with the same attrs', function(){
+test('object.mutable returns a new mutable object with the same attrs', function(){
     var o = p.object({ foo: 'bar' }),
-        t = o.transient()
+        t = o.mutable()
 
     a.ok('foo' in t)
     delete t.foo

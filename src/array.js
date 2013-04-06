@@ -45,7 +45,7 @@ array.prototype = {
     get: object.prototype.get,
     has: object.prototype.has,
 
-    transient: function(){
+    mutable: function(){
         return u.extend([], p.mutable(this['-data'](secret)))
     },
     push: function(){
@@ -56,14 +56,14 @@ array.prototype = {
         return this.slice(0, -1)
     },
     unshift: function(){
-        return new array(u.slice(arguments)).concat(this.transient())
+        return new array(u.slice(arguments)).concat(this.mutable())
     },
     shift: function(){
         return this.slice(1, this.length)
     },
     concat: function(a){
-        if ( a instanceof array ) return this.concat(a.transient())
-        else                     return new array(this.transient().concat(a))
+        if ( a instanceof array ) return this.concat(a.mutable())
+        else                     return new array(this.mutable().concat(a))
     }
 }
 
@@ -73,13 +73,13 @@ var retAny  = u.pick(Array.prototype, 'reduce', 'reduceRight')
 
 var wrapPrim = function(fn){
     return function(){
-        var t = this.transient()
+        var t = this.mutable()
         return fn.apply(t, arguments)
     }
 }
 var wrapArr = function(fn){
     return function(){
-        var t = this.transient()
+        var t = this.mutable()
         return new array(fn.apply(t, arguments))
     }
 }
