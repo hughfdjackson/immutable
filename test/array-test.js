@@ -1,151 +1,196 @@
-var a = require('assert'),
-    p = require('..')
+var a = require('assert')
+var im = require('..')
 
-suite('p.array')
+describe('im.array', function(){
 
-test('has right constructor', function(){
-    a.equal(p.array.prototype.constructor, p.array)
-})
+	describe('.assoc', function(){
 
-test('-data is a function', function(){
-    var arr = p.array([])
-    a.equal(typeof arr['-data'], 'function')
-})
+		it('should allow a new version to be made with added properties', function(){
 
-test('takes p.object\'s methods', function(){
-    var arr  = p.array(),
-        object = p.object()
+			var arr1 = im.array()
+				.assoc(1, 'first')
+				.assoc({ x: 'x val' })
 
-    a.equal(arr.get, object.get)
-    a.equal(arr.has, object.has)
-    a.equal(arr.dissoc, object.dissoc)
-})
+			var arr2 = arr1.assoc(['a', 'b', 'c'])
 
-test('array.assoc returns array', function(){
-    var arr = p.array().assoc(1, '2').assoc({ x: 3 }).assoc([1, 2, 3])
+			a.equal(arr1.get(1), 'first')
+			a.equal(arr1.get('x'), 'x val')
+			a.equal(arr1.length, 2)
 
-    a.ok(arr instanceof p.array)
-})
+			a.equal(arr2.get(1), 'b')
+		})
 
-test('array.mutable returns array with *all* props copied', function(){
-    var arr = p.array({ x: 3, 0: 1, 2: 3 }).mutable()
+		it('should return an im.array', function(){
+			a.ok(im.array() instanceof im.array)
+		})
+	})
 
-    a.equal(arr[0], 1)
-    a.equal(arr[2], 3)
-    a.equal(arr.length, 3)
+	describe('length', function(){
+		it('should get updated to be the largest int + 1', function(){
+			var arr1 = im.array([1, 2, 3])
+			a.equal(arr1.length, 3)
 
-    a.equal(arr.x, 3)
-    a.ok(Array.isArray(arr))
-})
+			var arr2 = arr1.push(1)
+			a.equal(arr2.length, 4)
 
-test('push', function(){
-    var arr = p.array([1, 2, 3])
+			var arr3 = arr1.concat([1, 2])
+			a.equal(arr3.length, 5)
 
-    arr.push(4, 5, 6)
-    a.deepEqual(arr.mutable(), [1, 2, 3])
+			var arr4 = arr1.assoc(100, 3)
+			a.equal(arr4.length, 101)
+		})
 
-    arr = arr.push(4, 5, 6)
-    a.deepEqual(arr.mutable(), [1, 2, 3, 4, 5, 6])
-})
+	})
 
-test('pop', function(){
-    var arr = p.array([1, 2, 3])
+	describe('.mutable', function(){
+		it('should return an array with all properties copied', function(){
+			var arr = im.array({ x: 3, 0: 1, 2: 3 }).mutable()
 
-    arr.pop()
-    a.deepEqual(arr.mutable(), [1, 2, 3])
+			a.equal(arr[0], 1)
+			a.equal(arr[2], 3)
+			a.equal(arr.length, 3)
 
-    arr = arr.pop()
-    a.deepEqual(arr.mutable(), [1, 2])
+			a.equal(arr.x, 3)
+			a.ok(Array.isArray(arr))
+		})
+	})
 
-    arr = p.array([])
-    arr = arr.pop()
+	describe('.push', function(){
+		it('should return a new immutable array with properties appended', function(){
+			var arr = im.array([1, 2, 3])
 
-    a.deepEqual(arr.mutable(), [])
-})
+			arr.push(4, 5, 6)
+			a.deepEqual(arr.mutable(), [1, 2, 3])
 
+			arr = arr.push(4, 5, 6)
+			a.deepEqual(arr.mutable(), [1, 2, 3, 4, 5, 6])
+		})
 
-test('unshift', function(){
-    var arr = p.array([1, 2, 3])
+	})
 
-    arr.unshift(4, 5, 6)
-    a.deepEqual(arr.mutable(), [1, 2, 3])
+	describe('.pop', function(){
+		it('should return a new immutable array with properties a property removed from the end', function(){
+			var arr = im.array([1, 2, 3])
 
-    arr = arr.unshift(4, 5, 6)
-    a.deepEqual(arr.mutable(), [4, 5, 6, 1, 2, 3])
-})
+			arr.pop()
+			a.deepEqual(arr.mutable(), [1, 2, 3])
 
-test('shift', function(){
-    var arr = p.array([1, 2, 3])
+			arr = arr.pop()
+			a.deepEqual(arr.mutable(), [1, 2])
 
-    arr.shift()
-    a.deepEqual(arr.mutable(), [1, 2, 3])
+			arr = im.array([])
+			arr = arr.pop()
 
-    arr = arr.shift()
-    a.deepEqual(arr.mutable(), [2, 3])
+			a.deepEqual(arr.mutable(), [])
+		})
+	})
 
-    arr = p.array([])
-    arr = arr.shift()
+	describe('.unshift', function(){
+		it('should return a new immutable array with properties unshifted onto the start', function(){
 
-    a.deepEqual(arr.mutable(), [])
-})
+			var arr1 = im.array([1, 2, 3])
+			var arr2 = arr1.unshift(4, 5, 6)
 
-test('concat', function(){
-    var arr = p.array([1, 2, 3]),
-        res = arr.concat([4, 5, 6])
+			a.deepEqual(arr1.mutable(), [1, 2, 3])
+			a.deepEqual(arr2.mutable(), [4, 5, 6, 1, 2, 3])
+		})
+	})
 
-    a.deepEqual(res.mutable(), [1, 2, 3, 4, 5, 6])
+	describe('.shift', function(){
+		it('should return a new immutable array with properties shifted from the front', function(){
+			var arr1 = im.array([1, 2, 3])
+			var arr2 = arr1.shift()
 
-    res = arr.concat(arr)
-    a.deepEqual(res.mutable(), [1, 2, 3, 1, 2, 3])
-})
+			a.deepEqual(arr1.mutable(), [1, 2, 3])
+			a.deepEqual(arr2.mutable(), [2, 3])
+		})
 
-test('length', function(){
-    var arr = p.array([1, 2, 3])
+		it('should return an empty immutable array for the empty case', function(){
+			var arr1 = im.array([])
+			var arr2 = arr1.shift()
 
-    a.equal(arr.length, 3)
+			a.deepEqual(arr1.mutable(), [])
+			a.deepEqual(arr2.mutable(), [])
+		})
 
-    arr = arr.push(1)
-    a.equal(arr.length, 4)
+	})
 
-    arr = arr.assoc(100, 3)
-    a.equal(arr.length, 101)
-})
+	describe('.concat', function(){
+		it('should concat regular arrays, returning a new immutable array with the aggregate value', function(){
+			var arr1 = im.array([1, 2, 3])
+			var arr2 = arr1.concat([4, 5, 6])
 
+			a.deepEqual(arr1.mutable(), [1, 2, 3])
+			a.deepEqual(arr2.mutable(), [1, 2, 3, 4, 5, 6])
+		})
 
-test('wraps all native methods', function(){
-    var assertNotSameAsPrototype = function(name){ a.notEqual(p.array.prototype[name], Array.prototype[name]) }
+		it('should concat immutable arrays, returning a new immutable array with the aggregate value', function(){
+			var arr1 = im.array([1, 2, 3])
+			var arr2 = im.array([4, 5, 6])
+			var arr3 = arr1.concat(arr2)
 
-    ;["toString", "toLocaleString", "join", "pop", "push", "concat", "reverse", "slice",
-     "splice", "sort", "filter", "forEach", "some", "every", "map", "indexOf", "lastIndexOf",
-      "reduce", "reduceRight"].forEach(assertNotSameAsPrototype)
-})
+			a.deepEqual(arr1.mutable(), [1, 2, 3])
+			a.deepEqual(arr2.mutable(), [4, 5, 6])
+			a.deepEqual(arr3.mutable(), [1, 2, 3, 4, 5, 6])
+		})
+	})
 
+	describe('.filter', function(){
+		it('should return a new immutable array, filtered for elements', function(){
+			var isOdd = function(n){ return n % 2 !== 0 }
+			var arr1 = im.array([1, 2, 3])
+			var arr2 = arr1.filter(isOdd)
 
-test('.filter - an object returning wrapped method - rewraps in p.array', function(){
-    var arr = p.array([1, 2, 3]),
-        odd = function(n){ return n % 2 !== 0 },
-        res = arr.filter(odd)
+			a.deepEqual(arr1.mutable(), [1, 2, 3])
+			a.deepEqual(arr2.mutable(), [1, 3])
+		})
+	})
 
-    a.ok(res instanceof p.array)
+	describe('.every', function(){
 
-    a.ok(arr.get(1), 2)
-    a.ok(res.get(1), undefined)
-})
+		it('should return a boolean indicating if every member of an array satisfies a predicate', function(){
 
-test('.every - a non-object returning wrapped method', function(){
-    var arr = p.array([1, 2, 3]),
-        odd = function(n){ return n % 2 !== 0 }
+			var isOdd = function(n){ return n % 2 !== 0 }
+			var arr1 = im.array([1, 2, 3])
+			var arr2 = im.array([1, 3, 5])
 
-    a.equal(arr.every(odd), false)
-    a.equal(arr.some(odd), true)
-})
+			a.equal(arr1.every(isOdd), false)
+			a.equal(arr2.every(isOdd), true)
+		})
+	})
 
-test('.reduce and .reduceRight return the same type', function(){
-    var arr = p.array([1, 2, 3])
+	describe('.reduce', function(){
+		it('should accumulate results, and return them', function(){
+			var arr1 = im.array(['a', 'b', 'c'])
+			var cat = function(a, b){ return a + b }
 
-    var res = arr.reduce(function(arr, i) { arr.push(i + 1); return arr }, [])
-    a.ok(!(res instanceof p.array))
+			a.equal(arr1.reduce(cat), 'abc')
+		})
+	})
 
-    res = arr.reduceRight(function(arr, i) { arr.push(i + 1); return arr }, [])
-    a.ok(!(res instanceof p.array))
+	describe('.reduceRight', function(){
+		it('should accumulate results in the opposite direction to .reduce, and return them', function(){
+			var arr1 = im.array(['a', 'b', 'c'])
+			var cat = function(a, b){ return a + b }
+
+			a.equal(arr1.reduceRight(cat), 'cba')
+		})
+	})
+
+	describe('native methods', function(){
+
+		// TODO: replace these with individual tests for each method
+		it('should have wrapped them', function(){
+
+			var assertNotSameAsPrototype = function(name){
+				a.notEqual(im.array.prototype[name], Array.prototype[name])
+			}
+
+			;["toString", "toLocaleString", "join", "pop", "push", "concat", "reverse", "slice",
+			"splice", "sort", "filter", "forEach", "some", "every", "map", "indexOf", "lastIndexOf",
+			"reduce", "reduceRight"].forEach(assertNotSameAsPrototype)
+
+		})
+
+	})
 })

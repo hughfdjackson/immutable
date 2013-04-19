@@ -1,21 +1,28 @@
 {
     "name": "immutable",
-    "description": "immutable data-structures in javascript.",
+    "description": "effecient immutable data-structures in javascript.",
     "version": "0.8.1",
     "main": "src/immutable.js",
-    "scripts": {
-        "test"       : "node test/runner.js test/"
-    },
+    "keywords": [
+        "immutability",
+        "functional programming",
+        "fp",
+        "persistent datastructures"
+    ],
+    "author": "hughfdjackson",
+    "license": "BSD",
     "repository": {
         "type": "git",
         "url": "https://github.com/hughfdjackson/immutable.git"
     },
     "dependencies": {
         "string-hash": "1.1.0",
-        "persistent-hash-trie": "0.3.x"
+        "persistent-hash-trie": "0.3.2"
+    },
+    "scripts": {
+        "test": "./node_modules/mocha/bin/mocha"
     },
     "devDependencies": {
-        "benchmark": "1.0.0",
         "underscore": "*",
         "mocha": "1.8.1"
     },
@@ -36,13 +43,6 @@
             "safari/5.0.5",
             "safari/5.1"
         ],
-        "harness": "mocha-qunit"
-    },
-    "keywords": [
-        "immutability",
-        "functional programming",
-        "persistent datastructures"
-    ],
-    "author": "hughfdjackson",
-    "license": "BSD"
+        "harness": "mocha"
+    }
 }

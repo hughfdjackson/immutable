@@ -1,99 +1,83 @@
 var a = require('assert')
-var p = require('..')
+var im = require('..')
 
-suite('p.object')
+describe('im.object', function(){
+    it('has the right constructor', function(){
+        a.equal(im.object.prototype.constructor, im.object)
+    })
 
-test('has right constructor', function(){
-    a.equal(p.object.prototype.constructor, p.object)
-})
+    it('freezes objects on creation', function(){
+        var o = im.object({ })
 
-suite('p.objects')
+        o.x = 3
+        a.equal(o.x, undefined)
+    })
 
-test('are frozen', function(){
-    var d = p.object({ })
+    describe('creation', function(){
+        it('should be a newless constructor', function(){
+            a.ok(im.object() instanceof im.object)
+        })
 
-    d.x = 3
-    a.equal(d.x, undefined)
-})
+        it('creates an empty object if no props are passed', function(){
+            var o = im.object()
+            a.deepEqual(o.mutable(), {})
+        })
 
-test('-data is a function', function(){
-    var d = p.object({ })
-    a.equal(typeof d['-data'], 'function')
-})
+        it('creates an object with props passed in', function(){
+            var props = { x: 'y', z: 'wibble' }
+            var o = im.object(props)
+            a.deepEqual(o.mutable(), props)
+        })
+    })
 
+    describe('.assoc', function(){
+        it('returns a new immutable object with props updated', function(){
+            var obj1 = im.object()
+            var obj2 = obj1.assoc('x', 3)
+            var obj3 = obj1.assoc({ y: 'x' })
 
-test('object()', function(){
-    var o = p.object()
-    a.ok(o)
-})
+            a.deepEqual(obj1.mutable(), {})
+            a.deepEqual(obj2.mutable(), { x: 3 })
+            a.deepEqual(obj3.mutable(), { y: 'x' })
+        })
+    })
 
-test('object(Object)', function(){
-    var opts = { x: 1, y: 2 },
-        o = p.object(opts)
+    describe('.dissoc', function(){
+        it('returns a new immutable object with props removed', function(){
 
-    a.ok(o.has('x'))
-    delete opts.x
-    a.ok(o.has('x'))
-})
+            var obj1 = im.object({ x: 1, y: 1 })
+            var obj2 = obj1.dissoc('x')
 
-test('object.assoc(k, v)', function(){
-    var o  = p.object(),
-        o2 = o.assoc('x', 3)
+            a.deepEqual(obj1.mutable(), { x: 1, y: 1 })
+            a.deepEqual(obj2.mutable(), { y: 1 })
+        })
+    })
 
-    a.notEqual(o, o2)
-})
+    describe('.get', function(){
+        it('should return a value of a stored property, or else undefined', function(){
+            var o = im.object({ x: 3 })
+            a.equal(o.get('x'), 3)
+            a.equal(o.get('y'), undefined)
+        })
+    })
 
-test('object.assoc', function(){
-    var o1 = p.object({ 'x': 3 }),
-        o2 = o1.assoc('y', 3).assoc({ 'z': 3 })
+    describe('.has', function(){
+        it('should return true or false, indicating whether a property exists on the prop', function(){
+            var o = im.object({ x: 3 })
+            a.equal(o.has('x'), true)
+            a.equal(o.has('y'), false)
+        })
+    })
 
-    a.ok(o1.has('x'))
-    a.ok(!o1.has('y'))
-    a.ok(!o1.has('z'))
+    describe('mutable', function(){
+        it('should return a mutable version of the immutable object', function(){
+            var obj1 = im.object({ foo: 'bar' })
+            var obj2 = obj1.mutable()
 
-    a.ok(o2.has('x'))
-    a.ok(o2.has('y'))
-    a.ok(o2.has('z'))
-})
+            obj2.bar = 'baz'
 
-test('object.get', function(){
-    var o = p.object().assoc('x', 3)
-
-    a.equal(o.get('x'), 3)
-    a.equal(o.get('y'), undefined)
-})
-
-test('object.has', function(){
-    var o = p.object().assoc('x', 3)
-
-    a.ok(o.has('x'))
-    a.ok(!o.has('y'))
-})
-
-test('object.dissoc', function(){
-    var o1 = p.object().assoc('x', 3),
-        o2 = o1.dissoc('x')
-
-    a.ok(o1.has('x'))
-    a.ok(!o2.has('x'))
-})
-
-test('object.delete NOT alias for object.dissoc', function(){
-    var o = p.object()
-    a.equal(o.delete, undefined)
-})
-
-test('p.object is a new-less constructor', function(){
-    a.ok(p.object() instanceof p.object)
-})
-
-
-test('object.mutable returns a new mutable object with the same attrs', function(){
-    var o = p.object({ foo: 'bar' }),
-        t = o.mutable()
-
-    a.ok('foo' in t)
-    delete t.foo
-    a.ok(!('foo' in t))
-    a.ok(o.has('foo'))
+            a.deepEqual(obj1.mutable(), { foo: 'bar' })
+            a.deepEqual(obj2, { bar: 'baz', foo: 'bar' })
+        })
+    })
 })

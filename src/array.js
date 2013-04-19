@@ -5,65 +5,89 @@ var object = require('./object')
 
 var p = require('persistent-hash-trie')
 
-var secret = {}
-
-var array = function(attrs){
-    if ( !(this instanceof array) ) return new array(attrs)
-
-    var store = p.Trie({})
-
-    this['-data'] = function(s, data){
-        if ( s === secret && data ) return store = data
-        else                        return store
-    }
-    return attrs ? this.assoc(attrs) : this
+// exported constructor
+// -- accepts attrs, and auto-assocs them on
+// -- as sugar
+module.exports = function(attrs){
+    return (new array()).assoc(attrs)
 }
 
-array.prototype = {
+// internal constructor
+var array = function(trie, length){
+    this._trie = trie || p.Trie()
+    this.length = length || 0
+    Object.freeze(this._trie)
+    Object.freeze(this)
+}
 
-    constructor: array,
+// helper assoc functions, to help support the variadicness of
+// object.prototype.assoc
+var assocMultiple = function(arr, attrs){
+    for ( var p in attrs ) arr = arr.assoc(p, attrs[p])
+    return arr
+}
 
-    // stealing from object
+var assocOne = function(arr, key, value){
+    var keyAsLength = parseInt(key, 10) + 1
+    var length = Math.max(arr.length, keyAsLength || 0)
+
+    var trie = p.assoc(arr._trie, key.toString(), value)
+    return new array(trie, length)
+}
 
 
-    assoc: function(k, v){
-        if ( typeof k === 'object' && typeof k !== null ) {
-            var keys = Object.keys(k)
-            return keys.reduce(function(object, key){ return object.assoc(key, k[key]) }, this)
-        }
-        var t = p.assoc(this['-data'](secret), k, v)
-        var ret = new array()
-        ret['-data'](secret, t)
+// prototype to both constructors
+// -- so that `immutable.array() instanceof immutable.array` is true,
+// -- and extending the prototype works as expected
+module.exports.prototype = array.prototype = {
 
-        ret.length = this.length > k ? this.length  : parseInt(k, 10) + 1
-        Object.freeze(this)
-        return ret
+    // futher cementing the lie that the prototype 'belongs' to the exported
+    // constructor
+    constructor: module.exports,
+
+    assoc: function(arg1, arg2){
+        if ( arguments.length === 1 ) return assocMultiple(this, arg1)
+        else                          return assocOne(this, arg1, arg2)
     },
 
-    dissoc: object.prototype.dissoc,
+    dissoc: function(key){
+        var trie = p.dissoc(this._trie, key.toString())
+        return new array(trie, this.length)
+    },
 
-    get: object.prototype.get,
-    has: object.prototype.has,
+    get: function(key){
+        return p.get(this._trie, key.toString())
+    },
+
+    has: function(key){
+        return p.has(this._trie, key.toString())
+    },
 
     mutable: function(){
-        return u.extend([], p.mutable(this['-data'](secret)))
+        return u.extend([], p.mutable(this._trie))
     },
+
+    concat: function(a){
+        a = (a instanceof array) ? a.mutable() : a
+        var aggregate = this.mutable().concat(a)
+        return new module.exports(aggregate)
+    },
+
     push: function(){
         var args = u.slice(arguments)
         return this.concat(args)
     },
+
     pop: function(){
         return this.slice(0, -1)
     },
+
     unshift: function(){
-        return new array(u.slice(arguments)).concat(this.mutable())
+        return new module.exports(u.slice(arguments)).concat(this.mutable())
     },
+
     shift: function(){
         return this.slice(1, this.length)
-    },
-    concat: function(a){
-        if ( a instanceof array ) return this.concat(a.mutable())
-        else                     return new array(this.mutable().concat(a))
     }
 }
 
@@ -80,12 +104,10 @@ var wrapPrim = function(fn){
 var wrapArr = function(fn){
     return function(){
         var t = this.mutable()
-        return new array(fn.apply(t, arguments))
+        return new module.exports(fn.apply(t, arguments))
     }
 }
 
 u.extend(array.prototype, u.mapObj(retPrim, wrapPrim))
 u.extend(array.prototype, u.mapObj(retAny, wrapPrim))
 u.extend(array.prototype, u.mapObj(retArr, wrapArr))
-
-module.exports = array
