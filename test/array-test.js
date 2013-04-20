@@ -118,10 +118,30 @@ describe('im.array', function(){
 			var arr = [1, 2, 3]
 			var imArr = im.array(arr)
 
-			it('should return the same as native, once mutable is called', function(){
-				a.deepEqual(arr.slice().splice(), imArr.splice().mutable())
-				a.deepEqual(arr.slice().splice(1), imArr.splice(1).mutable())
-				a.deepEqual(arr.slice().splice(1, 2), imArr.splice(1, 2).mutable())
+			// We're delegating to the native splice - which sometimes returns undefined on older
+			// platforms - a behaviour we're looking to replicate.
+			it('should return the same as native, once mutable is called, for no args', function(){
+				var arrRes = arr.slice().splice()
+				var imRes = imArr.splice()
+
+				if ( imRes ) a.deepEqual(imRes.mutable(), arrRes)
+				else         a.equal(imRes, arrRes)
+			})
+
+			it('should return the same as native, once mutable is called, for 1 arg', function(){
+				var arrRes = arr.slice().splice(1)
+				var imRes = imArr.splice(1)
+
+				if ( imRes ) a.deepEqual(imRes.mutable(), arrRes)
+				else         a.equal(imRes, arrRes)
+			})
+
+			it('should return the same as native, once mutable is called, for 2 args', function(){
+				var arrRes = arr.slice().splice(1, 2)
+				var imRes = imArr.splice(1, 2)
+
+				if ( imRes ) a.deepEqual(imRes.mutable(), arrRes)
+				else         a.equal(imRes, arrRes)
 			})
 
 		})
