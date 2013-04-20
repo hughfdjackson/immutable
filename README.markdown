@@ -14,7 +14,7 @@ Mutability causes headaches; immutability soothes them.  JavaScript's Object and
 Current support is limited to ECMAScript 5 compliant environments; although ECMAScript 3 compliance [is a goal of this project](https://github.com/hughfdjackson/immutable/issues/7).
 
 
-[![browser support](http://ci.testling.com/hughfdjackson/immutable.png)](http://ci.testling.com/hughfdjackson/immutable)
+[![browser support](https://ci.testling.com/hughfdjackson/immutable.png)](http://ci.testling.com/hughfdjackson/immutable)
 
 ## Example
 

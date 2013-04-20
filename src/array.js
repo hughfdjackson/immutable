@@ -1,6 +1,5 @@
 'use strict'
 
-
 var p = require('persistent-hash-trie')
 var util = require('./util')
 
