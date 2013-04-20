@@ -283,23 +283,43 @@ describe('im.array', function(){
 		describe('.reduce', function(){
 			if ( !Array.prototype.reduce ) return
 
-			it('should accumulate results, and return them', function(){
-				var arr1 = im.array(['a', 'b', 'c'])
-				var cat = function(a, b){ return a + b }
+			var arr = im.array(['a', 'b', 'c'])
+			var cat = function(a, b){ return a + b }
 
-				a.equal(arr1.reduce(cat), 'abc')
+
+			it('should accumulate results, and return them', function(){
+				a.equal(arr.reduce(cat), 'abc')
+			})
+
+			it('should accumlate results from a seed', function(){
+				a.equal(arr.reduce(cat, 'def'), 'defabc')
+			})
+
+			it('should return an array if reducing over an array', function(){
+				var id = function(a){ return a }
+				a.deepEqual(arr.reduce(id, []), [])
 			})
 		})
 
 		describe('.reduceRight', function(){
 			if ( !Array.prototype.reduceRight ) return
 
-			it('should accumulate results in the opposite direction to .reduce, and return them', function(){
-				var arr1 = im.array(['a', 'b', 'c'])
-				var cat = function(a, b){ return a + b }
+			var arr = im.array(['a', 'b', 'c'])
+			var cat = function(a, b){ return a + b }
 
-				a.equal(arr1.reduceRight(cat), 'cba')
+			it('should accumulate results in the opposite direction to .reduce, and return them', function(){
+				a.equal(arr.reduceRight(cat), 'cba')
 			})
+
+			it('should accumulate results in the opposite direction to .reduce with a seed, and return them', function(){
+				a.equal(arr.reduceRight(cat, 'def'), 'defcba')
+			})
+
+			it('should return an array if reducing over an array', function(){
+				var id = function(a){ return a }
+				a.deepEqual(arr.reduceRight(id, []), [])
+			})
+
 		})
 
 	})

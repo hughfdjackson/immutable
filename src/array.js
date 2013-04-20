@@ -112,6 +112,6 @@ var wrapPrim = function(fn){
 }
 
 
-util.extend(array.prototype, util.mapObj(retPrim, wrapPrim))
-util.extend(array.prototype, util.mapObj(retAny, wrap))
+util.extend(array.prototype, util.mapObj(retPrim, wrap))
 util.extend(array.prototype, util.mapObj(retArr, wrap))
+util.extend(array.prototype, util.mapObj(retAny, wrapPrim))
