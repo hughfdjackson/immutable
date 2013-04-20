@@ -60,7 +60,7 @@ describe('im.array', function(){
 			a.equal(arr.length, 3)
 
 			a.equal(arr.x, 3)
-			a.ok(Array.isArray(arr))
+			a.ok(arr instanceof Array)
 		})
 	})
 
