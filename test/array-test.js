@@ -65,149 +65,241 @@ describe('im.array', function(){
 	})
 
 
-	describe('.toJSON', function(){
-		it('should be an alias for .mutable', function(){
-			var arr = im.array()
-			a.equal(arr.mutable, arr.toJSON)
+	describe('ES3 equvialent methods', function(){
+		describe('.toJSON', function(){
+			it('should be an alias for .mutable', function(){
+				var arr = im.array()
+				a.equal(arr.mutable, arr.toJSON)
+			})
+		})
+
+		describe('.join', function(){
+			it('should join together values with a default seperator (i.e. none)', function(){
+				a.equal(im.array([1, 2, 3]).join(), [1, 2, 3].join())
+			})
+
+			it('should take a separator an argument', function(){
+				a.equal(im.array([1, 2, 3]).join(' '), [1, 2, 3].join(' '))
+			})
+		})
+
+		describe('.slice', function(){
+			var arr = [1, 2, 3]
+			var imArr = im.array(arr)
+
+			it('should return the same as native, once mutable is called', function(){
+				a.deepEqual(arr.slice(), imArr.slice().mutable())
+				a.deepEqual(arr.slice(1), imArr.slice(1).mutable())
+				a.deepEqual(arr.slice(1, 2), imArr.slice(1, 2).mutable())
+			})
+		})
+
+		describe('.sort', function(){
+			var arr = [3, 2, 1]
+			var imArr = im.array(arr)
+			var reverseComparator = function(a, b){ return a < b }
+
+			it('should return the same as native, once mutable is called', function(){
+				a.deepEqual(arr.slice().sort(), imArr.sort().mutable())
+				a.deepEqual(arr.slice().sort(reverseComparator), imArr.sort(reverseComparator).mutable())
+			})
+		})
+
+		describe('.reverse', function(){
+			var arr = [1, 2, 3]
+			var imArr = im.array(arr)
+
+			it('should return the same as native, once mutable is called', function(){
+				a.deepEqual(arr.slice().reverse(), imArr.reverse().mutable())
+			})
+		})
+
+		describe('.splice', function(){
+			var arr = [1, 2, 3]
+			var imArr = im.array(arr)
+
+			it('should return the same as native, once mutable is called', function(){
+				a.deepEqual(arr.slice().splice(), imArr.splice().mutable())
+				a.deepEqual(arr.slice().splice(1), imArr.splice(1).mutable())
+				a.deepEqual(arr.slice().splice(1, 2), imArr.splice(1, 2).mutable())
+			})
+
+		})
+
+		describe('.push', function(){
+			it('should return a new immutable array with properties appended', function(){
+				var arr = im.array([1, 2, 3])
+
+				arr.push(4, 5, 6)
+				a.deepEqual(arr.mutable(), [1, 2, 3])
+
+				arr = arr.push(4, 5, 6)
+				a.deepEqual(arr.mutable(), [1, 2, 3, 4, 5, 6])
+			})
+
+		})
+
+		describe('.pop', function(){
+			it('should return a new immutable array with properties a property removed from the end', function(){
+				var arr = im.array([1, 2, 3])
+
+				arr.pop()
+				a.deepEqual(arr.mutable(), [1, 2, 3])
+
+				arr = arr.pop()
+				a.deepEqual(arr.mutable(), [1, 2])
+
+				arr = im.array([])
+				arr = arr.pop()
+
+				a.deepEqual(arr.mutable(), [])
+			})
+		})
+
+		describe('.unshift', function(){
+			it('should return a new immutable array with properties unshifted onto the start', function(){
+
+				var arr1 = im.array([1, 2, 3])
+				var arr2 = arr1.unshift(4, 5, 6)
+
+				a.deepEqual(arr1.mutable(), [1, 2, 3])
+				a.deepEqual(arr2.mutable(), [4, 5, 6, 1, 2, 3])
+			})
+		})
+
+		describe('.shift', function(){
+			it('should return a new immutable array with properties shifted from the front', function(){
+				var arr1 = im.array([1, 2, 3])
+				var arr2 = arr1.shift()
+
+				a.deepEqual(arr1.mutable(), [1, 2, 3])
+				a.deepEqual(arr2.mutable(), [2, 3])
+			})
+
+			it('should return an empty immutable array for the empty case', function(){
+				var arr1 = im.array([])
+				var arr2 = arr1.shift()
+
+				a.deepEqual(arr1.mutable(), [])
+				a.deepEqual(arr2.mutable(), [])
+			})
+
+		})
+
+		describe('.concat', function(){
+			it('should concat regular arrays, returning a new immutable array with the aggregate value', function(){
+				var arr1 = im.array([1, 2, 3])
+				var arr2 = arr1.concat([4, 5, 6])
+
+				a.deepEqual(arr1.mutable(), [1, 2, 3])
+				a.deepEqual(arr2.mutable(), [1, 2, 3, 4, 5, 6])
+			})
+
+			it('should concat immutable arrays, returning a new immutable array with the aggregate value', function(){
+				var arr1 = im.array([1, 2, 3])
+				var arr2 = im.array([4, 5, 6])
+				var arr3 = arr1.concat(arr2)
+
+				a.deepEqual(arr1.mutable(), [1, 2, 3])
+				a.deepEqual(arr2.mutable(), [4, 5, 6])
+				a.deepEqual(arr3.mutable(), [1, 2, 3, 4, 5, 6])
+			})
+		})
+		describe('.toString', function(){
+			it('should return the same as array\'s', function(){
+				a.equal([1, 2, 3].toString(), im.array([1, 2, 3]).toString())
+			})
+		})
+
+		describe('.toLocaleString', function(){
+			it('should return the same as array\'s', function(){
+				a.equal([1, 2, 3].toLocaleString(), im.array([1, 2, 3]).toLocaleString())
+			})
+		})
+
+		describe('.indexOf', function(){
+			var arr = im.array([1, 2, 3, 1, 2, 3])
+
+			it('should return -1 if not found', function(){
+				a.equal(arr.indexOf(0), -1)
+			})
+
+			it('should return first index otherwise', function(){
+				a.equal(arr.indexOf(1), 0)
+				a.equal(arr.indexOf(2), 1)
+				a.equal(arr.indexOf(3), 2)
+			})
+		})
+
+		describe('.lastIndexOf', function(){
+			var arr = im.array([1, 2, 3, 1, 2, 3])
+
+			it('should return -1 if not found', function(){
+				a.equal(arr.lastIndexOf(0), -1)
+			})
+
+			it('should return last index otherwise', function(){
+				a.equal(arr.lastIndexOf(1), 3)
+				a.equal(arr.lastIndexOf(2), 4)
+				a.equal(arr.lastIndexOf(3), 5)
+			})
 		})
 	})
 
 
-	describe('.push', function(){
-		it('should return a new immutable array with properties appended', function(){
-			var arr = im.array([1, 2, 3])
 
-			arr.push(4, 5, 6)
-			a.deepEqual(arr.mutable(), [1, 2, 3])
+	describe('ES5 equivalent methods', function(){
 
-			arr = arr.push(4, 5, 6)
-			a.deepEqual(arr.mutable(), [1, 2, 3, 4, 5, 6])
+		// IF es5 is not available, these methods are unsupported
+		describe('.filter', function(){
+
+			if ( !Array.prototype.filter ) return
+
+			it('should return a new immutable array, filtered for elements', function(){
+				var isOdd = function(n){ return n % 2 !== 0 }
+				var arr1 = im.array([1, 2, 3])
+				var arr2 = arr1.filter(isOdd)
+
+				a.deepEqual(arr1.mutable(), [1, 2, 3])
+				a.deepEqual(arr2.mutable(), [1, 3])
+			})
 		})
 
-	})
+		describe('.every', function(){
 
-	describe('.pop', function(){
-		it('should return a new immutable array with properties a property removed from the end', function(){
-			var arr = im.array([1, 2, 3])
+			if ( !Array.prototype.every ) return
 
-			arr.pop()
-			a.deepEqual(arr.mutable(), [1, 2, 3])
+			it('should return a boolean indicating if every member of an array satisfies a predicate', function(){
 
-			arr = arr.pop()
-			a.deepEqual(arr.mutable(), [1, 2])
+				var isOdd = function(n){ return n % 2 !== 0 }
+				var arr1 = im.array([1, 2, 3])
+				var arr2 = im.array([1, 3, 5])
 
-			arr = im.array([])
-			arr = arr.pop()
-
-			a.deepEqual(arr.mutable(), [])
-		})
-	})
-
-	describe('.unshift', function(){
-		it('should return a new immutable array with properties unshifted onto the start', function(){
-
-			var arr1 = im.array([1, 2, 3])
-			var arr2 = arr1.unshift(4, 5, 6)
-
-			a.deepEqual(arr1.mutable(), [1, 2, 3])
-			a.deepEqual(arr2.mutable(), [4, 5, 6, 1, 2, 3])
-		})
-	})
-
-	describe('.shift', function(){
-		it('should return a new immutable array with properties shifted from the front', function(){
-			var arr1 = im.array([1, 2, 3])
-			var arr2 = arr1.shift()
-
-			a.deepEqual(arr1.mutable(), [1, 2, 3])
-			a.deepEqual(arr2.mutable(), [2, 3])
+				a.equal(arr1.every(isOdd), false)
+				a.equal(arr2.every(isOdd), true)
+			})
 		})
 
-		it('should return an empty immutable array for the empty case', function(){
-			var arr1 = im.array([])
-			var arr2 = arr1.shift()
+		describe('.reduce', function(){
+			if ( !Array.prototype.reduce ) return
 
-			a.deepEqual(arr1.mutable(), [])
-			a.deepEqual(arr2.mutable(), [])
+			it('should accumulate results, and return them', function(){
+				var arr1 = im.array(['a', 'b', 'c'])
+				var cat = function(a, b){ return a + b }
+
+				a.equal(arr1.reduce(cat), 'abc')
+			})
 		})
 
-	})
+		describe('.reduceRight', function(){
+			if ( !Array.prototype.reduceRight ) return
 
-	describe('.concat', function(){
-		it('should concat regular arrays, returning a new immutable array with the aggregate value', function(){
-			var arr1 = im.array([1, 2, 3])
-			var arr2 = arr1.concat([4, 5, 6])
+			it('should accumulate results in the opposite direction to .reduce, and return them', function(){
+				var arr1 = im.array(['a', 'b', 'c'])
+				var cat = function(a, b){ return a + b }
 
-			a.deepEqual(arr1.mutable(), [1, 2, 3])
-			a.deepEqual(arr2.mutable(), [1, 2, 3, 4, 5, 6])
-		})
-
-		it('should concat immutable arrays, returning a new immutable array with the aggregate value', function(){
-			var arr1 = im.array([1, 2, 3])
-			var arr2 = im.array([4, 5, 6])
-			var arr3 = arr1.concat(arr2)
-
-			a.deepEqual(arr1.mutable(), [1, 2, 3])
-			a.deepEqual(arr2.mutable(), [4, 5, 6])
-			a.deepEqual(arr3.mutable(), [1, 2, 3, 4, 5, 6])
-		})
-	})
-
-	describe('.filter', function(){
-		it('should return a new immutable array, filtered for elements', function(){
-			var isOdd = function(n){ return n % 2 !== 0 }
-			var arr1 = im.array([1, 2, 3])
-			var arr2 = arr1.filter(isOdd)
-
-			a.deepEqual(arr1.mutable(), [1, 2, 3])
-			a.deepEqual(arr2.mutable(), [1, 3])
-		})
-	})
-
-	describe('.every', function(){
-
-		it('should return a boolean indicating if every member of an array satisfies a predicate', function(){
-
-			var isOdd = function(n){ return n % 2 !== 0 }
-			var arr1 = im.array([1, 2, 3])
-			var arr2 = im.array([1, 3, 5])
-
-			a.equal(arr1.every(isOdd), false)
-			a.equal(arr2.every(isOdd), true)
-		})
-	})
-
-	describe('.reduce', function(){
-		it('should accumulate results, and return them', function(){
-			var arr1 = im.array(['a', 'b', 'c'])
-			var cat = function(a, b){ return a + b }
-
-			a.equal(arr1.reduce(cat), 'abc')
-		})
-	})
-
-	describe('.reduceRight', function(){
-		it('should accumulate results in the opposite direction to .reduce, and return them', function(){
-			var arr1 = im.array(['a', 'b', 'c'])
-			var cat = function(a, b){ return a + b }
-
-			a.equal(arr1.reduceRight(cat), 'cba')
-		})
-	})
-
-	describe('native methods', function(){
-
-		// TODO: replace these with individual tests for each method
-		it('should have wrapped them', function(){
-
-			var assertNotSameAsPrototype = function(name){
-				a.notEqual(im.array.prototype[name], Array.prototype[name])
-			}
-
-			;["toString", "toLocaleString", "join", "pop", "push", "concat", "reverse", "slice",
-			"splice", "sort", "filter", "forEach", "some", "every", "map", "indexOf", "lastIndexOf",
-			"reduce", "reduceRight"].forEach(assertNotSameAsPrototype)
-
+				a.equal(arr1.reduceRight(cat), 'cba')
+			})
 		})
 
 	})
