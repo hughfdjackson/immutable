@@ -97,18 +97,21 @@ var retPrim = util.pick(Array.prototype, 'toString', 'toLocaleString', 'indexOf'
 var retArr  = util.pick(Array.prototype, 'reverse', 'slice', 'splice', 'sort', 'filter', 'forEach', 'map')
 var retAny  = util.pick(Array.prototype, 'reduce', 'reduceRight')
 
+var wrap = function(fn){
+    return function(){
+        var result = fn.apply(this.mutable(), arguments)
+        if ( result instanceof Array ) return new module.exports(result)
+        else                           return result
+    }
+
+}
 var wrapPrim = function(fn){
     return function(){
         return fn.apply(this.mutable(), arguments)
     }
 }
-var wrapArr = function(fn){
-    return function(){
-        var t = this.mutable()
-        return new module.exports(fn.apply(t, arguments))
-    }
-}
+
 
 util.extend(array.prototype, util.mapObj(retPrim, wrapPrim))
-util.extend(array.prototype, util.mapObj(retAny, wrapPrim))
-util.extend(array.prototype, util.mapObj(retArr, wrapArr))
+util.extend(array.prototype, util.mapObj(retAny, wrap))
+util.extend(array.prototype, util.mapObj(retArr, wrap))
