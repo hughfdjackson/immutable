@@ -12,9 +12,12 @@ var mapObj = function(o, fn){
 }
 
 var pick = function(o){
-    var names = slice(arguments, 1),
-        r     = {}
-    names.forEach(function(p){ r[p] = o[p] })
+    var names = slice(arguments, 1)
+    var r = {}
+
+    for ( var i = 0; i < names.length; i += 1 )
+        r[names[i]] = o[names[i]]
+
     return r
 }
 
