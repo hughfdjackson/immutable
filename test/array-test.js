@@ -3,6 +3,15 @@ var im = require('..')
 
 describe('im.array', function(){
 
+	it('freezes arrays on creation if available', function(){
+		if ( !Object.freeze ) return
+
+		var arr = im.array()
+
+		arr.x = 3
+		a.equal(a.x, undefined)
+	})
+
 	describe('.assoc', function(){
 
 		it('should allow a new version to be made with added properties', function(){

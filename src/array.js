@@ -1,9 +1,8 @@
 'use strict'
 
-var u    = require('./util')
-var object = require('./object')
 
 var p = require('persistent-hash-trie')
+var util = require('./util')
 
 // exported constructor
 // -- accepts attrs, and auto-assocs them on
@@ -12,28 +11,54 @@ module.exports = function(attrs){
     return (new array()).assoc(attrs)
 }
 
-// internal constructor
-var array = function(trie, length){
-    this._trie = trie || p.Trie()
-    this.length = length || 0
-    Object.freeze(this._trie)
-    Object.freeze(this)
-}
 
 // helper assoc functions, to help support the variadicness of
-// object.prototype.assoc
+// array.prototype.assoc
 var assocMultiple = function(arr, attrs){
     for ( var p in attrs ) arr = arr.assoc(p, attrs[p])
     return arr
 }
 
-var assocOne = function(arr, key, value){
+var assocOne = function(arr, trie, key, value){
     var keyAsLength = parseInt(key, 10) + 1
     var length = Math.max(arr.length, keyAsLength || 0)
 
-    var trie = p.assoc(arr._trie, key.toString(), value)
-    return new array(trie, length)
+    var newTrie = p.assoc(trie, key.toString(), value)
+    return new array(newTrie, length)
 }
+
+
+// internal constructor
+var array = function(trie, length){
+    trie = trie || p.Trie()
+
+    this.length = length || 0
+
+    this.assoc = function(arg1, arg2){
+        if ( arguments.length === 1 ) return assocMultiple(this, arg1)
+        else                          return assocOne(this, trie, arg1, arg2)
+    }
+
+    this.dissoc = function(key){
+        var newTrie = p.dissoc(trie, key.toString())
+        return new array(newTrie, this.length)
+    }
+
+    this.get = function(key){
+        return p.get(trie, key.toString())
+    }
+
+    this.has = function(key){
+        return p.has(trie, key.toString())
+    }
+
+    this.mutable = function(){
+        return util.extend([], p.mutable(trie))
+    }
+
+    util.freeze(this)
+}
+
 
 
 // prototype to both constructors
@@ -45,28 +70,6 @@ module.exports.prototype = array.prototype = {
     // constructor
     constructor: module.exports,
 
-    assoc: function(arg1, arg2){
-        if ( arguments.length === 1 ) return assocMultiple(this, arg1)
-        else                          return assocOne(this, arg1, arg2)
-    },
-
-    dissoc: function(key){
-        var trie = p.dissoc(this._trie, key.toString())
-        return new array(trie, this.length)
-    },
-
-    get: function(key){
-        return p.get(this._trie, key.toString())
-    },
-
-    has: function(key){
-        return p.has(this._trie, key.toString())
-    },
-
-    mutable: function(){
-        return u.extend([], p.mutable(this._trie))
-    },
-
     concat: function(a){
         a = (a instanceof array) ? a.mutable() : a
         var aggregate = this.mutable().concat(a)
@@ -74,7 +77,7 @@ module.exports.prototype = array.prototype = {
     },
 
     push: function(){
-        var args = u.slice(arguments)
+        var args = util.slice(arguments)
         return this.concat(args)
     },
 
@@ -83,7 +86,7 @@ module.exports.prototype = array.prototype = {
     },
 
     unshift: function(){
-        return new module.exports(u.slice(arguments)).concat(this.mutable())
+        return new module.exports(util.slice(arguments)).concat(this.mutable())
     },
 
     shift: function(){
@@ -91,9 +94,9 @@ module.exports.prototype = array.prototype = {
     }
 }
 
-var retPrim = u.pick(Array.prototype, 'toString', 'toLocaleString', 'indexOf', 'lastIndexOf', 'some', 'every')
-var retArr  = u.pick(Array.prototype, 'join', 'reverse', 'slice', 'splice', 'sort', 'filter', 'forEach', 'map')
-var retAny  = u.pick(Array.prototype, 'reduce', 'reduceRight')
+var retPrim = util.pick(Array.prototype, 'toString', 'toLocaleString', 'indexOf', 'lastIndexOf', 'some', 'every')
+var retArr  = util.pick(Array.prototype, 'join', 'reverse', 'slice', 'splice', 'sort', 'filter', 'forEach', 'map')
+var retAny  = util.pick(Array.prototype, 'reduce', 'reduceRight')
 
 var wrapPrim = function(fn){
     return function(){
@@ -108,6 +111,6 @@ var wrapArr = function(fn){
     }
 }
 
-u.extend(array.prototype, u.mapObj(retPrim, wrapPrim))
-u.extend(array.prototype, u.mapObj(retAny, wrapPrim))
-u.extend(array.prototype, u.mapObj(retArr, wrapArr))
+util.extend(array.prototype, util.mapObj(retPrim, wrapPrim))
+util.extend(array.prototype, util.mapObj(retAny, wrapPrim))
+util.extend(array.prototype, util.mapObj(retArr, wrapArr))

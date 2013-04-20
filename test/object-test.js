@@ -6,7 +6,9 @@ describe('im.object', function(){
         a.equal(im.object.prototype.constructor, im.object)
     })
 
-    it('freezes objects on creation', function(){
+    it('freezes object on creation if Object.freeze is available', function(){
+        if ( ! Object.freeze ) return
+
         var o = im.object({ })
 
         o.x = 3

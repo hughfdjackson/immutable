@@ -18,10 +18,13 @@ var pick = function(o){
     return r
 }
 
+var freeze = Object.freeze || function(o){ return o }
+
 module.exports = {
     extend    : extend,
     clone     : clone,
     slice     : slice,
     mapObj    : mapObj,
-    pick      : pick
+    pick      : pick,
+    freeze    : freeze
 }
