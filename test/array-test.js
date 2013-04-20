@@ -64,6 +64,15 @@ describe('im.array', function(){
 		})
 	})
 
+
+	describe('.toJSON', function(){
+		it('should be an alias for .mutable', function(){
+			var arr = im.array()
+			a.equal(arr.mutable, arr.toJSON)
+		})
+	})
+
+
 	describe('.push', function(){
 		it('should return a new immutable array with properties appended', function(){
 			var arr = im.array([1, 2, 3])

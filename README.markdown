@@ -94,6 +94,7 @@ o.has('foo')       //= true
 ```
 
 ### .mutable() -> Object
+#### alias - .toJSON
 
 Returns a seperate, mutable object with the same attrs.
 
@@ -114,6 +115,7 @@ o.has('foo') //= true
 Shares the same API as `immutable.object`, except:
 
 ### .mutable() -> Array
+#### alias - .toJSON
 
 Returns a seperate, mutable array with the same attrs.
 

@@ -51,7 +51,7 @@ var array = function(trie, length){
         return p.has(trie, key.toString())
     }
 
-    this.mutable = function(){
+    this.mutable = this.toJSON = function(){
         return util.extend([], p.mutable(trie))
     }
 

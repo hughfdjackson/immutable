@@ -45,7 +45,7 @@ var object = function(trie){
         return p.has(trie, key.toString())
     }
 
-    this.mutable = function(){
+    this.mutable = this.toJSON = function(){
         return p.mutable(trie)
     }
 

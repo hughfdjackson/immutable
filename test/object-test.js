@@ -71,7 +71,7 @@ describe('im.object', function(){
         })
     })
 
-    describe('mutable', function(){
+    describe('.mutable', function(){
         it('should return a mutable version of the immutable object', function(){
             var obj1 = im.object({ foo: 'bar' })
             var obj2 = obj1.mutable()
@@ -80,6 +80,13 @@ describe('im.object', function(){
 
             a.deepEqual(obj1.mutable(), { foo: 'bar' })
             a.deepEqual(obj2, { bar: 'baz', foo: 'bar' })
+        })
+    })
+
+    describe('.toJSON', function(){
+        it('should be an alias for mutable', function(){
+            var obj = im.object()
+            a.equal(obj.mutable, obj.toJSON)
         })
     })
 })
