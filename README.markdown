@@ -32,12 +32,12 @@ personWithAge.get('age')   //= 24
 Create an empty immutable object:
 
 ```javascript
-var o = im.object()
+var emptyObject = im.object()
 ```
 
 Or define the initial set of properties:
 ```javascript
-var you = im.object({ wise: true, willUseThisLib: true })
+var person = im.object({ name: 'joe bloggs', age: 34 })
 ```
 
 ### .assoc
@@ -47,7 +47,7 @@ Create a new immutable object with a property added or updated:
 ```javascript
 var emptyObject = im.object()
 
-var basicPerson = o.assoc('human', true)
+var basicPerson = emptyObject.assoc('human', true)
 ```
 
 Or pass an object to define multiple properties at once:
