@@ -30,6 +30,15 @@ describe('im.object', function(){
             var o = im.object(props)
             a.deepEqual(o.mutable(), props)
         })
+
+        it('shouldn\'t copy over properties on the prototype', function(){
+            var F = function(){}
+            F.prototype.foo = 'my-val'
+
+            var obj = im.object({ name: 'joe bloggs' }).assoc(new F)
+            a.equal(obj.get('foo'), undefined)
+        })
+
     })
 
     describe('.assoc', function(){

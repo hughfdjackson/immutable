@@ -32,6 +32,14 @@ describe('im.array', function(){
 		it('should return an im.array', function(){
 			a.ok(im.array() instanceof im.array)
 		})
+
+		it('shouldn\'t copy over properties on the prototype', function(){
+			var F = function(){}
+			F.prototype.foo = 'my-val'
+
+			var arr = im.array([1, 2, 3]).assoc(new F)
+			a.equal(arr.get('foo'), undefined)
+		})
 	})
 
 	describe('length', function(){

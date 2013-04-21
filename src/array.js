@@ -14,7 +14,9 @@ module.exports = function(attrs){
 // helper assoc functions, to help support the variadicness of
 // array.prototype.assoc
 var assocMultiple = function(arr, attrs){
-    for ( var p in attrs ) arr = arr.assoc(p, attrs[p])
+    for ( var p in attrs )
+        if ( attrs.hasOwnProperty(p) )
+            arr = arr.assoc(p, attrs[p])
     return arr
 }
 
