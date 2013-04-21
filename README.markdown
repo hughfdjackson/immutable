@@ -142,7 +142,8 @@ Work identically in imutable.array as they do in immutable.object, except that t
 Check the 'length' of an immutable array:
 
 ```javascript
-
+var arr = im.array([1, 2, 3])
+arr.length //= 3
 ```
 
 ### .mutable / .toJSON
