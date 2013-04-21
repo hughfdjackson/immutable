@@ -1,26 +1,20 @@
-**Warning: API Unstable (even more so than most < 1.0.0 releases)**
-
 # immutable
 
-immutable neatly packages immutable equivalents to JavaScript's Objects and Arrays.
+Effecient immutable data-structures in javascript.
 
 ## Why?
 
 Mutability causes headaches; immutability soothes them.  JavaScript's Object and Array are crying out for immutable counterparts to complement first-class functions.
 
-
 ## Support
-
-Current support is limited to ECMAScript 5 compliant environments; although ECMAScript 3 compliance [is a goal of this project](https://github.com/hughfdjackson/immutable/issues/7).
-
 
 [![browser support](https://ci.testling.com/hughfdjackson/immutable.png)](http://ci.testling.com/hughfdjackson/immutable)
 
 ## Example
 
 ```javascript
-var i = require('immutable'),
-    person = i.object({ firstName: 'hugh', secondName: 'jackson' })
+var im = require('immutable')
+var person = im.object({ firstName: 'hugh', secondName: 'jackson' })
 
 var personWithAge = person.assoc({ age: 24 })
 
@@ -33,130 +27,143 @@ personWithAge.get('age')   //= 24
 
 `npm install immutable`
 
-## immutable.object([Object]) -> object
+## immutable.object
 
-Creates an empty object, or assocs the attributes if an object is passed.
-
-```javascript
-var o = i.object()
-
-// or
-var you = i.object({ wise: true, willUseThisLib: true })
-```
-
-### .assoc(String, Value) OR .assoc(Object) -> object
-
-Returns a new object with the additional attribute(s).
+Create an empty immutable object:
 
 ```javascript
-var o = i.object()
-
-var changed = o.assoc('x', 3).assoc({ y: 4, z: 5 })
-
-changed.has('x') //= true
-changed.get('y') //= 4
+var o = im.object()
 ```
 
-### .get(String) -> value
+Or define the initial set of properties:
+```javascript
+var you = im.object({ wise: true, willUseThisLib: true })
+```
 
-Gets an attribute.
+### .assoc
+
+Create a new immutable object with a property added or updated:
 
 ```javascript
-var o = i.object({ x: 3, y: 4 })
+var emptyObject = im.object()
 
-o.get('x') //= 3
+var basicPerson = o.assoc('human', true)
 ```
 
-### .has(String) -> Boolean
+Or pass an object to define multiple properties at once:
+```javascript
+var personRecord = basicPerson.assoc({ name: 'joe bloggs', age: 34 })
+```
 
-Returns true or false; same as `key in object` for regular objects:
+### .get
+
+Get a property:
 
 ```javascript
-var o = i.object({ x: 3, y: 4 })
+var person = im.object({ name: 'joe bloggs', age: 34 })
 
-o.has('x') //= true
-o.has('z') //= false
+person.get('age') //= 34
 ```
 
-### .dissoc(String) -> object
-
-Returns a new `object` with the key removed.
+It works on numeric keys too, although you're more likely to use an array for this:
 
 ```javascript
-var o = i.object({
-    foo: 'bar',
-    baz: 'quux'
-})
+var readingList = im.object({ 1: 'Operating System Design: The Xinu Approach' })
 
-var updated = o.dissoc('foo').dissoc('baz')
-updated.has('foo') //= false
-o.has('foo')       //= true
+readingList.get(1) //= 'Operating System Design: The Xinu Approach'
 ```
 
-### .mutable() -> Object
-#### alias - .toJSON
+### .has
 
-Returns a seperate, mutable object with the same attrs.
+Check if an immutable object has a property:
 
 ```javascript
-var o = i.object({
-    foo: 'bar',
-    baz: 'quux'
-})
+var person = im.object({ name: 'joe bloggs', age: 34 })
 
-var trans = o.mutable()
-delete trans.foo
-
-o.has('foo') //= true
+person.has('name')        //= true
+person.has('discography') //= false
 ```
 
-## immutable.array(Array) -> array
+### .dissoc
 
-Shares the same API as `immutable.object`, except:
-
-### .mutable() -> Array
-#### alias - .toJSON
-
-Returns a seperate, mutable array with the same attrs.
+Create a new immutable object *without* a property:
 
 ```javascript
-var arr1 = i.array([1, 2, 3]),
-    arr2 = arr1.mutable()
+var person = im.object({ name: 'joe bloggs', age: 34 })
 
-arr2.splice(1)
+var personShyAboutAge = person.dissoc('age')
 
-arr1[1] !== arr2[1] //= true
+personShyAboutAge.get('age') //= undefined
 ```
 
-### Native Methods
+### .mutable / .toJSON
 
-The following native methods return a new instance of i.array:
+Create a regular JavaScript object from an immutable one:
 
-* map
-* sort
-* filter
-* splice
-* slice
-* reverse
-* concat
-* pop
-* push
-* shift
-* unshift
+```javascript
 
-The following native methods work as expected for a regular array:
+var person = im.object({ name: 'joe bloggs', age: 34 })
 
-* toString
-* toLocaleString
-* join
-* forEach
-* indexOf
-* lastIndexOf
-* every
-* some
-* reduce
-* reduceRight
+person.mutable() //= { name: 'joe bloggs', age: 34 }
+```
 
-## Resources
+The `.toJSON` alias allows immutable objects to be serialised seamlessly with regular objects:
 
-Based on [Bagwell (2001)](http://lampwww.epfl.ch/papers/idealhashtrees.pdf), and [Clojure's immutable implementation of a Hash Array Mapped Trie](https://github.com/clojure/clojure/blob/master/src/jvm/clojure/lang/PersistentHashMap.java).
+```javscript
+var favouritePeople = {
+	joe: im.object({ name: 'joe bloggs', age: 34 })
+}
+
+var data = JSON.stringify(favouritePeople)
+
+data // = { joe: { name: 'joe bloggs', age: 34 } }
+```
+
+## immutable.array
+
+Create a new immutable array:
+
+```javascript
+var arr = im.array()
+```
+
+or with initial values:
+
+```javascript
+var arr = im.array([1, 2, 3, 4])
+```
+
+### .assoc/.dissoc/.get/.has
+
+Work identically in imutable.array as they do in immutable.object, except that they keep the .length property of the array up to date.
+
+### .length
+
+Check the 'length' of an immutable array:
+
+```javascript
+
+```
+
+### .mutable / .toJSON
+
+Create a regular JavaScript object from an immutable one:
+
+```javascript
+var todo = im.array(['write README', 'run tests on all supported platform'])
+
+todo.mutable() //= ['write README', 'run tests on all supported platform']
+```
+
+The `.toJSON` alias allows immutable objects to be serialised seamlessly with regular objects:
+
+```javscript
+var lists = {
+	todo: im.array(['write README', 'run tests on all supported platform'])
+}
+
+var data = JSON.stringify(lists)
+
+data // = { todo: ['write README', 'run tests on all supported platform'] }
+```
+

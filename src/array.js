@@ -67,51 +67,5 @@ module.exports.prototype = array.prototype = {
 
     // futher cementing the lie that the prototype 'belongs' to the exported
     // constructor
-    constructor: module.exports,
-
-    concat: function(a){
-        a = (a instanceof array) ? a.mutable() : a
-        var aggregate = this.mutable().concat(a)
-        return new module.exports(aggregate)
-    },
-
-    push: function(){
-        var args = util.slice(arguments)
-        return this.concat(args)
-    },
-
-    pop: function(){
-        return this.slice(0, -1)
-    },
-
-    unshift: function(){
-        return new module.exports(util.slice(arguments)).concat(this.mutable())
-    },
-
-    shift: function(){
-        return this.slice(1, this.length)
-    }
-}
-
-var retPrim = util.pick(Array.prototype, 'toString', 'toLocaleString', 'indexOf', 'lastIndexOf', 'some', 'every', 'join')
-var retArr  = util.pick(Array.prototype, 'reverse', 'slice', 'splice', 'sort', 'filter', 'forEach', 'map')
-var retAny  = util.pick(Array.prototype, 'reduce', 'reduceRight')
-
-var wrap = function(fn){
-    return function(){
-        var result = fn.apply(this.mutable(), arguments)
-        if ( result instanceof Array ) return new module.exports(result)
-        else                           return result
-    }
-
-}
-var wrapPrim = function(fn){
-    return function(){
-        return fn.apply(this.mutable(), arguments)
-    }
-}
-
-
-util.extend(array.prototype, util.mapObj(retPrim, wrap))
-util.extend(array.prototype, util.mapObj(retArr, wrap))
-util.extend(array.prototype, util.mapObj(retAny, wrapPrim))
+    constructor: module.exports
+ }
