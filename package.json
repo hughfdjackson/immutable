@@ -1,7 +1,7 @@
 {
     "name": "immutable",
-    "description": "effecient immutable data-structures in javascript.",
-    "version": "0.9.2",
+    "description": "efficient immutable data-structures in javascript.",
+    "version": "1.0.0",
     "main": "src/immutable.js",
     "keywords": [
         "immutability",

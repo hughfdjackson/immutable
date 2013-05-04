@@ -62,7 +62,6 @@ describe('im.array', function(){
 			var arr4 = arr1.assoc(100, 3)
 			a.equal(arr4.length, 101)
 		})
-
 	})
 
 	describe('.mutable', function(){

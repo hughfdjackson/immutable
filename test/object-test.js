@@ -39,7 +39,6 @@ describe('im.object', function(){
             var obj = im.object({ name: 'joe bloggs' }).assoc(new F())
             a.equal(obj.get('foo'), undefined)
         })
-
     })
 
     describe('.immutable', function(){
