@@ -57,6 +57,8 @@ var array = function(trie, length){
         return util.extend([], p.mutable(trie))
     }
 
+    this.immutable = true
+
     util.freeze(this)
 }
 

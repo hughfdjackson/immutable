@@ -12,6 +12,12 @@ describe('im.array', function(){
 		a.equal(a.x, undefined)
 	})
 
+    describe('.immutable', function(){
+        it('should be set to true', function(){
+            a.equal(im.array().immutable, true)
+        })
+    })
+
 	describe('.assoc', function(){
 
 		it('should allow a new version to be made with added properties', function(){

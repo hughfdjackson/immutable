@@ -51,6 +51,8 @@ var object = function(trie){
         return p.mutable(trie)
     }
 
+    this.immutable = true
+
     util.freeze(this)
 }
 

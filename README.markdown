@@ -118,6 +118,13 @@ var data = JSON.stringify(favouritePeople)
 
 data // = { joe: { name: 'joe bloggs', age: 34 } }
 ```
+### .immutable
+
+`.immutable` is a simple boolean flag, which is set to `true` on all immutable objects, for easy, consistent querying:
+
+```javascript
+im.object().immutable //= true
+```
 
 ## immutable.array
 
@@ -133,7 +140,7 @@ or with initial values:
 var arr = im.array([1, 2, 3, 4])
 ```
 
-### .assoc/.dissoc/.get/.has
+### .assoc/.dissoc/.get/.has/.immutable
 
 Work identically in imutable.array as they do in immutable.object, except that they keep the .length property of the array up to date.
 

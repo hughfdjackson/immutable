@@ -15,6 +15,7 @@ describe('im.object', function(){
         a.equal(o.x, undefined)
     })
 
+
     describe('creation', function(){
         it('should be a newless constructor', function(){
             a.ok(im.object() instanceof im.object)
@@ -35,11 +36,18 @@ describe('im.object', function(){
             var F = function(){}
             F.prototype.foo = 'my-val'
 
-            var obj = im.object({ name: 'joe bloggs' }).assoc(new F)
+            var obj = im.object({ name: 'joe bloggs' }).assoc(new F())
             a.equal(obj.get('foo'), undefined)
         })
 
     })
+
+    describe('.immutable', function(){
+        it('should be set to true', function(){
+            a.equal(im.object().immutable, true)
+        })
+    })
+
 
     describe('.assoc', function(){
         it('returns a new immutable object with props updated', function(){
