@@ -43,7 +43,7 @@ describe('im.array', function(){
 			var F = function(){}
 			F.prototype.foo = 'my-val'
 
-			var arr = im.array([1, 2, 3]).assoc(new F)
+			var arr = im.array([1, 2, 3]).assoc(new F())
 			a.equal(arr.get('foo'), undefined)
 		})
 	})
