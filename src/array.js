@@ -99,6 +99,39 @@ var array = function(trie, length){
         return result
     }
 
+
+    var firstMember = function(a){
+        for ( var i = 0, len = a.length; i < len; i += 1 ) if ( a.has(i) ) return i
+    }
+
+    this.reduce = function(fn, seed){
+        if ( arguments.length === 1 ) {
+            var member = firstMember(this)
+            return this.dissoc(member).reduce(fn, this.get(member))
+        }
+
+        for ( var i = 0, len = this.length; i < len; i += 1 ) {
+            if ( this.has(i) ) seed = fn(seed, this.get(i), i.toString(), this)
+        }
+        return seed
+    }
+
+    var lastMember = function(a){
+        for ( var i = a.length - 1; i  >= 0; i -= 1 ) if ( a.has(i) ) return i
+    }
+
+    this.reduceRight = function(fn, seed){
+        if ( arguments.length === 1 ) {
+            var member = lastMember(this)
+            return this.dissoc(member).reduceRight(fn, this.get(member))
+        }
+
+        for ( var i = this.length - 1; i  >= 0; i -= 1 ) {
+            if ( this.has(i) ) seed = fn(seed, this.get(i), i.toString(), this)
+        }
+        return seed
+    }
+
     this.immutable = true
 
     util.freeze(this)

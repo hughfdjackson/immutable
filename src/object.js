@@ -89,6 +89,30 @@ var object = function(trie){
         }, new object())
     }
 
+    var separateSeed = function(o){
+        var keyVal = p.reduce(trie, function(key, val){
+            throw p.reduce.Break({ key: key, val: val })
+        })
+
+        return {
+            seed: keyVal.val,
+            rest: o.dissoc(keyVal.key)
+        }
+    }
+
+    this.reduce = function(fn, seed){
+        var orig = this
+
+        if ( arguments.length === 1 ) {
+            var seedAndRest = separateSeed(this)
+            seed = seedAndRest.seed
+            return seedAndRest.rest.reduce(fn, seed)
+        }
+
+        return p.reduce(trie, function(seed, val, key){
+            return fn(seed, val, key, orig)
+        }, seed)
+    }
 
     this.immutable = true
 

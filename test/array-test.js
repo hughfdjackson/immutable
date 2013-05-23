@@ -219,4 +219,57 @@ describe('im.array', function(){
             ])
         })
     })
+
+    describe('reduce', function(){
+
+        it('should reduce over collection in left to right order', function(){
+
+            var details = function(seed, val, key, array){
+                seed.push({ val: val, key: key, array: array })
+                return seed
+            }
+
+            var arr = im.array([1, 2, 3])
+
+            a.deepEqual(arr.reduce(details, []), [
+                { val: 1, key: '0', array: arr },
+                { val: 2, key: '1', array: arr },
+                { val: 3, key: '2', array: arr }
+            ])
+        })
+
+        it('should use first item as seed if none passed', function(){
+            var cat = function(a, b){ return a + b }
+            var arr = im.array(['1', '2', '3'])
+
+            a.equal(arr.reduce(cat), '123')
+        })
+    })
+
+    describe('reduceRight', function(){
+
+        it('should reduce over collection in right to left order', function(){
+
+            var details = function(seed, val, key, array){
+                seed.push({ val: val, key: key, array: array })
+                return seed
+            }
+
+            var arr = im.array([1, 2, 3])
+
+            a.deepEqual(arr.reduceRight(details, []), [
+                { val: 3, key: '2', array: arr },
+                { val: 2, key: '1', array: arr },
+                { val: 1, key: '0', array: arr }
+            ])
+        })
+
+        it('should use first item as seed if none passed', function(){
+            var cat = function(a, b){ return a + b }
+            var arr = im.array(['1', '2', '3'])
+
+            a.equal(arr.reduceRight(cat), '321')
+        })
+    })
+
 })

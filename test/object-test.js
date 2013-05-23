@@ -232,4 +232,31 @@ describe('im.object', function(){
         })
     })
 
+    describe('reduce', function(){
+
+        it('should reduce over collection in any order', function(){
+
+            var details = function(seed, val, key, object){
+                seed[key] = { val: val, key: key, object: object }
+                return seed
+            }
+
+            var obj = im.object({ x: 2, y: 4, z: 6 })
+            obj.filter(details)
+
+            a.deepEqual(obj.reduce(details, {}), {
+                x: { val: 2, key: 'x', object: obj },
+                y: { val: 4, key: 'y', object: obj },
+                z: { val: 6, key: 'z', object: obj }
+            })
+        })
+
+        it('should use "first" item as seed if none passed', function(){
+            var add = function(a, b){ return a + b }
+            var obj = im.object({ x: 1, y: 2, z: 3 })
+
+            a.equal(obj.reduce(add), 6)
+        })
+    })
+
 })
