@@ -105,4 +105,43 @@ describe('im.object', function(){
             a.equal(obj.mutable, obj.toJSON)
         })
     })
+
+    describe('.map', function(){
+        it('should create an immutable object with updated values', function(){
+            var inc = function(a){ return a + 1 }
+            var obj = im.object({ x: 1, y: 2, z: 3 })
+
+            a.deepEqual(obj.map(inc).mutable(), { x: 2, y: 3, z: 4 })
+        })
+
+        it('should pass val, key, object', function(){
+            var details = function(val, key, object){ return { val: val, key: key, object: object } }
+            var obj = im.object({ x: 1, y: 2, z: 3 })
+
+            a.deepEqual(obj.map(details).mutable(), {
+                x: { val: 1, key: 'x', object: obj },
+                y: { val: 2, key: 'y', object: obj },
+                z: { val: 3, key: 'z', object: obj }
+            })
+        })
+    })
+
+    describe('forEach', function(){
+        it('should pass val, key, object, but return nothing', function(){
+            var results = {}
+            var details = function(val, key, object){
+                results[key] = { val: val, key: key, object: object }
+            }
+            var obj = im.object({ x: 1, y: 2, z: 3 })
+
+            var ret = obj.forEach(details)
+
+            a.equal(ret, undefined)
+            a.deepEqual(results, {
+                x: { val: 1, key: 'x', object: obj },
+                y: { val: 2, key: 'y', object: obj },
+                z: { val: 3, key: 'z', object: obj }
+            })
+        })
+    })
 })

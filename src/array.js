@@ -57,6 +57,20 @@ var array = function(trie, length){
         return util.extend([], p.mutable(trie))
     }
 
+    this.map = function(fn){
+        var result = this
+        for ( var i = 0, len = this.length; i < len; i += 1 ) {
+            if ( this.has(i) ) result = result.assoc(i, fn(this.get(i), i, this))
+        }
+        return result
+    }
+
+    this.forEach = function(fn){
+        for ( var i = 0, len = this.length; i < len; i += 1 ) {
+            if ( this.has(i) ) fn(this.get(i), i.toString(), this)
+        }
+    }
+
     this.immutable = true
 
     util.freeze(this)

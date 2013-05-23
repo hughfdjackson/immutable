@@ -126,6 +126,17 @@ data // = { joe: { name: 'joe bloggs', age: 34 } }
 im.object().immutable //= true
 ```
 
+### .map
+
+`.map` maps over all values in an object to create a new one.
+
+```
+var o = im.object({ x: 1, y: 2, z: 3 })
+var inc = function(a){ return a + 1 }
+
+o.map(inc).mutable() //= { x: 2, y: 3, z: 4 }
+```
+
 ## immutable.array
 
 Create a new immutable array:
@@ -175,3 +186,13 @@ var data = JSON.stringify(lists)
 data // = { todo: ['write README', 'run tests on all supported platform'] }
 ```
 
+### .map
+
+`.map` maps over all values in an array, like JavaScript's native Array.prototype.map
+
+```
+var arr = im.array([1, 2, 3])
+var inc = function(a){ return a + 1 }
+
+arr.map(inc).mutable() //= [2, 3, 4]
+```

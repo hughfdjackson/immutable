@@ -83,4 +83,43 @@ describe('im.array', function(){
 			a.equal(arr.mutable, arr.toJSON)
 		})
 	})
+
+	describe('.map', function(){
+        it('should create an immutable object with updated values', function(){
+            var inc = function(a){ return a + 1 }
+            var arr = im.array([1, 2, 3])
+
+            a.deepEqual(arr.map(inc).mutable(), [2, 3, 4])
+        })
+
+        it('should pass val, key, array', function(){
+            var details = function(val, key, array){ return { val: val, key: key, array: array } }
+            var arr = im.array([1, 2, 3])
+
+            a.deepEqual(arr.map(details).mutable(), [
+                { val: 1, key: '0', array: arr },
+                { val: 2, key: '1', array: arr },
+                { val: 3, key: '2', array: arr }
+            ])
+        })
+    })
+
+    describe('forEach', function(){
+        it('should pass val, key, array, but return nothing', function(){
+            var results = []
+            var details = function(val, key, array){
+                results.push({ val: val, key: key, array: array })
+            }
+            var arr = im.array([1, 2, 3])
+
+            var ret = arr.forEach(details)
+
+            a.equal(ret, undefined)
+            a.deepEqual(results, [
+                { val: 1, key: '0', array: arr },
+                { val: 2, key: '1', array: arr },
+                { val: 3, key: '2', array: arr }
+            ])
+        })
+    })
 })

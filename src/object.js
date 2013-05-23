@@ -51,6 +51,20 @@ var object = function(trie){
         return p.mutable(trie)
     }
 
+    this.map = function(fn){
+        var orig = this
+        return p.reduce(trie, function(o, val, key){
+            return o.assoc(key, fn(val, key, orig))
+        }, orig)
+    }
+
+    this.forEach = function(fn){
+        var orig = this
+        return p.reduce(trie, function(o, val, key){
+            fn(val, key, orig)
+        })
+    }
+
     this.immutable = true
 
     util.freeze(this)
