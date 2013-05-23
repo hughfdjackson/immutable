@@ -89,6 +89,16 @@ var array = function(trie, length){
         return false
     }
 
+    this.filter = function(predicate){
+        var result = new array()
+        for ( var i = 0, len = this.length; i < len; i += 1 ) {
+            if ( this.has(i) ) {
+                if ( predicate(this.get(i), i.toString(), this) === true ) result = result.assoc(result.length, this.get(i))
+            }
+        }
+        return result
+    }
+
     this.immutable = true
 
     util.freeze(this)

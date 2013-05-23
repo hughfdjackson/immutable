@@ -81,6 +81,15 @@ var object = function(trie){
         }, false)
     }
 
+    this.filter = function(predicate){
+        var orig = this
+        return p.reduce(trie, function(o, val, key){
+            if ( predicate(val, key, orig) === true ) return o.assoc(key, val)
+            else                                      return o
+        }, new object())
+    }
+
+
     this.immutable = true
 
     util.freeze(this)

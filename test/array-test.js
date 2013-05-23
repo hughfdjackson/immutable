@@ -75,6 +75,14 @@ describe('im.array', function(){
 			a.equal(arr.x, 3)
 			a.ok(arr instanceof Array)
 		})
+
+		it('should represent gaps with missing data', function(){
+			var input = [1]
+			input[2] = 2
+			var arr = im.array(input)
+
+			a.deepEqual(arr.mutable(), input)
+		})
 	})
 
 	describe('.toJSON', function(){
@@ -187,4 +195,28 @@ describe('im.array', function(){
     })
 
 
+    describe('filter', function(){
+        var isOdd = function(n){ return n % 2 !== 0 }
+
+        it('should filter a collection', function(){
+        	var arr = im.array([1, 2, 3])
+            a.deepEqual(arr.filter(isOdd).mutable(), [1, 3])
+        })
+
+        it('should pass val, key, array', function(){
+            var results = []
+            var details = function(val, key, array){
+                results.push({ val: val, key: key, array: array })
+            }
+
+            var arr = im.array([ 2, 4, 6 ])
+            arr.filter(details)
+
+            a.deepEqual(results, [
+                { val: 2, key: '0', array: arr },
+                { val: 4, key: '1', array: arr },
+                { val: 6, key: '2', array: arr }
+            ])
+        })
+    })
 })

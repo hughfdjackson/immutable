@@ -207,4 +207,29 @@ describe('im.object', function(){
         })
     })
 
+    describe('filter', function(){
+        var isOdd = function(n){ return n % 2 !== 0 }
+
+        it('should filter a collection', function(){
+            var obj = im.object({ x: 1, y: 2, z: 3 })
+            a.deepEqual(obj.filter(isOdd).mutable(), { x: 1, z: 3 })
+        })
+
+        it('should pass val, key, object', function(){
+            var results = {}
+            var details = function(val, key, object){
+                results[key] = { val: val, key: key, object: object }
+            }
+
+            var obj = im.object({ x: 2, y: 4, z: 6 })
+            obj.filter(details)
+
+            a.deepEqual(results, {
+                x: { val: 2, key: 'x', object: obj },
+                y: { val: 4, key: 'y', object: obj },
+                z: { val: 6, key: 'z', object: obj }
+            })
+        })
+    })
+
 })
