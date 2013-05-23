@@ -155,4 +155,36 @@ describe('im.array', function(){
         })
     })
 
+    describe('some', function(){
+        var isOdd = function(n){ return n % 2 !== 0 }
+
+        it('should return true if the predicate does once', function(){
+            var arr = im.array([1, 2, 3])
+            a.equal(arr.some(isOdd), true)
+        })
+
+        it('should return false if predicate never is satisfied', function(){
+            var arr = im.array([2, 4, 6])
+            a.equal(arr.some(isOdd), false)
+        })
+
+        it('should pass val, key, array', function(){
+            var results = []
+            var details = function(val, key, array){
+                results.push({ val: val, key: key, array: array })
+                return false
+            }
+
+            var arr = im.array([2, 4, 6])
+            arr.some(details)
+
+            a.deepEqual(results, [
+                { val: 2, key: '0', array: arr },
+                { val: 4, key: '1', array: arr },
+                { val: 6, key: '2', array: arr }
+            ])
+        })
+    })
+
+
 })

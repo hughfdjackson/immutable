@@ -73,6 +73,14 @@ var object = function(trie){
         }, true)
     }
 
+    this.some = function(predicate){
+        var orig = this
+        return p.reduce(trie, function(o, val, key){
+            if ( predicate(val, key, orig) === true ) throw new p.reduce.Break(true)
+            else                                      return false
+        }, false)
+    }
+
     this.immutable = true
 
     util.freeze(this)
