@@ -65,6 +65,14 @@ var object = function(trie){
         })
     }
 
+    this.every = function(predicate){
+        var orig = this
+        return p.reduce(trie, function(o, val, key){
+            if ( predicate(val, key, orig) === true ) return true
+            else                                      throw new p.reduce.Break(false)
+        }, true)
+    }
+
     this.immutable = true
 
     util.freeze(this)

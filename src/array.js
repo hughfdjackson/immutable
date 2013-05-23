@@ -71,6 +71,15 @@ var array = function(trie, length){
         }
     }
 
+    this.every = function(predicate){
+        for ( var i = 0, len = this.length; i < len; i += 1 ) {
+            if ( this.has(i) ) {
+                if ( predicate(this.get(i), i.toString(), this) !== true ) return false
+            }
+        }
+        return true
+    }
+
     this.immutable = true
 
     util.freeze(this)

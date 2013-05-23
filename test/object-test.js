@@ -144,4 +144,35 @@ describe('im.object', function(){
             })
         })
     })
+
+    describe('every', function(){
+        var isOdd = function(n){ return n % 2 !== 0 }
+
+        it('should return false if the predicate does once', function(){
+            var obj = im.object({ x: 1, y: 2, z: 3 })
+            a.equal(obj.every(isOdd), false)
+        })
+
+        it('should return true if predicate always is satisfied', function(){
+            var obj = im.object({ x: 1, y: 3, z: 5 })
+            a.equal(obj.every(isOdd), true)
+        })
+
+        it('should pass val, key, object', function(){
+            var results = {}
+            var details = function(val, key, object){
+                results[key] = { val: val, key: key, object: object }
+                return true
+            }
+
+            var obj = im.object({ x: 1, y: 3, z: 5 })
+            obj.every(details)
+
+            a.deepEqual(results, {
+                x: { val: 1, key: 'x', object: obj },
+                y: { val: 3, key: 'y', object: obj },
+                z: { val: 5, key: 'z', object: obj }
+            })
+        })
+    })
 })
