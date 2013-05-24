@@ -258,5 +258,4 @@ describe('im.object', function(){
             a.equal(obj.reduce(add), 6)
         })
     })
-
 })

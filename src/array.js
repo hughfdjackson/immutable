@@ -124,8 +124,6 @@ module.exports.prototype = array.prototype = {
         return result
     },
 
-
-
     reduce: function(fn, seed){
         if ( arguments.length === 1 ) {
             var member = firstMember(this)
@@ -137,7 +135,6 @@ module.exports.prototype = array.prototype = {
         }
         return seed
     },
-
 
     reduceRight: function(fn, seed){
         if ( arguments.length === 1 ) {
