@@ -106,3 +106,84 @@ im.array().immutable  //= true
 
 ## Iteration
 
+Immutable objects and arrays can be iterated over almost identically, except that:
+* objects iterate over *all* keys, and return objects where appropriate;
+* arrays iterate over *only numberic* keys, and return arrays where appropriate.
+
+All iterator functions (unless mentioned) well pass the value, the key, and the original immutable object to their callback functions.
+
+### .map
+
+```javascript
+var inc = function(a){ return a + 1 }
+
+var coordinates = im.object({ x: 1, y: 1 })
+coordinates.map(inc).mutable() // { x: 1, y: 1 }
+
+var numbers = im.array([1, 2, 3, 4, 5])
+numbers.map(inc).mutable() // [2, 3, 4, 5, 6]
+```
+
+### .forEach
+
+```javascript
+var log = console.log.bind(console)
+
+var person = im.object({ name: 'joe bloggs', age: 34 })
+person.map(log)
+// *log output*
+// 'joe bloggs' 'name' person
+// 34           'age'  person
+```
+
+### .filter
+
+```javascript
+var isNum = function(a){ return typeof a === 'number' }
+
+var person = im.object({ name: 'joe bloggs', age: 34 })
+person.filter(isNum).mutable() //= { age: 34 }
+
+var alphaNumber = im.array(['a', 1, 'b', 2, 'c', 3])
+alphaNumber.filter(isNum).mutable() //= [1, 2, 3]
+```
+
+### .every
+
+```javascript
+var isNum = function(a){ return typeof a === 'number' }
+
+var person = im.object({ name: 'joe bloggs', age: 34 })
+person.every(isNum) //= false
+
+var alphaNumber = im.array(['a', 1, 'b', 2, 'c', 3])
+alphaNumber.every(isNum) //= false
+
+```
+
+### .some
+
+```javascript
+var isNum = function(a){ return typeof a === 'number' }
+
+var person = im.object({ name: 'joe bloggs', age: 34 })
+person.some(isNum) //= true
+
+var alphaNumber = im.array(['a', 1, 'b', 2, 'c', 3])
+alphaNumber.some(isNum) //= true
+
+```
+
+### .reduce
+
+```javascript
+
+```
+
+### .reduceRight
+
+*array only*
+
+```javascript
+
+```
