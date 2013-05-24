@@ -177,7 +177,17 @@ alphaNumber.some(isNum) //= true
 ### .reduce
 
 ```javascript
+var flip = function(coll, val, key){
+	return coll.assoc(key, val)
+}
 
+var person = im.object({ x: '1', y: '2', z: '3' })
+var flippedPerson = person.reduce(flip, im.object())
+flippedPerson.mutable() //= { 1: 'x', 2: 'y', 3: 'z' }
+
+var cat = function(a, b){ return a + b }
+var letters = im.array(['a', 'b', 'c'])
+letters.reduce(cat)  //= 'abc'
 ```
 
 ### .reduceRight
@@ -185,5 +195,7 @@ alphaNumber.some(isNum) //= true
 *array only*
 
 ```javascript
-
+var cat = function(a, b){ return a + b }
+var letters = im.array(['a', 'b', 'c'])
+letters.reduceRight(cat)  //= 'cba'
 ```
