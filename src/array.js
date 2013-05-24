@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var p = require('persistent-hash-trie')
 var util = require('./util')
@@ -57,39 +57,64 @@ var array = function(trie, length){
         return util.extend([], p.mutable(trie))
     }
 
-    this.map = function(fn){
+
+    this.immutable = true
+
+    util.freeze(this)
+}
+
+var firstMember = function(a){
+    for ( var i = 0, len = a.length; i < len; i += 1 ) if ( a.has(i) ) return i
+}
+
+var lastMember = function(a){
+    for ( var i = a.length - 1; i  >= 0; i -= 1 ) if ( a.has(i) ) return i
+}
+
+
+// prototype to both constructors
+// -- so that `immutable.array() instanceof immutable.array` is true,
+// -- and extending the prototype works as expected
+module.exports.prototype = array.prototype = {
+
+    // futher cementing the lie that the prototype 'belongs' to the exported
+    // constructor
+    constructor: module.exports,
+
+    map: function(fn){
         var result = this
         for ( var i = 0, len = this.length; i < len; i += 1 ) {
             if ( this.has(i) ) result = result.assoc(i, fn(this.get(i), i, this))
         }
         return result
-    }
+    },
 
-    this.forEach = function(fn){
+    // iteration methods
+    forEach: function(fn){
         for ( var i = 0, len = this.length; i < len; i += 1 ) {
             if ( this.has(i) ) fn(this.get(i), i.toString(), this)
         }
-    }
+    },
 
-    this.every = function(predicate){
+    every: function(predicate){
         for ( var i = 0, len = this.length; i < len; i += 1 ) {
             if ( this.has(i) ) {
                 if ( predicate(this.get(i), i.toString(), this) !== true ) return false
             }
         }
         return true
-    }
+    },
 
-    this.some = function(predicate){
+    some: function(predicate){
         for ( var i = 0, len = this.length; i < len; i += 1 ) {
             if ( this.has(i) ) {
                 if ( predicate(this.get(i), i.toString(), this) === true ) return true
             }
         }
         return false
-    }
+    },
 
-    this.filter = function(predicate){
+    filter: function(predicate){
         var result = new array()
         for ( var i = 0, len = this.length; i < len; i += 1 ) {
             if ( this.has(i) ) {
@@ -97,14 +122,11 @@ var array = function(trie, length){
             }
         }
         return result
-    }
+    },
 
 
-    var firstMember = function(a){
-        for ( var i = 0, len = a.length; i < len; i += 1 ) if ( a.has(i) ) return i
-    }
 
-    this.reduce = function(fn, seed){
+    reduce: function(fn, seed){
         if ( arguments.length === 1 ) {
             var member = firstMember(this)
             return this.dissoc(member).reduce(fn, this.get(member))
@@ -114,13 +136,10 @@ var array = function(trie, length){
             if ( this.has(i) ) seed = fn(seed, this.get(i), i.toString(), this)
         }
         return seed
-    }
+    },
 
-    var lastMember = function(a){
-        for ( var i = a.length - 1; i  >= 0; i -= 1 ) if ( a.has(i) ) return i
-    }
 
-    this.reduceRight = function(fn, seed){
+    reduceRight: function(fn, seed){
         if ( arguments.length === 1 ) {
             var member = lastMember(this)
             return this.dissoc(member).reduceRight(fn, this.get(member))
@@ -132,19 +151,4 @@ var array = function(trie, length){
         return seed
     }
 
-    this.immutable = true
-
-    util.freeze(this)
-}
-
-
-
-// prototype to both constructors
-// -- so that `immutable.array() instanceof immutable.array` is true,
-// -- and extending the prototype works as expected
-module.exports.prototype = array.prototype = {
-
-    // futher cementing the lie that the prototype 'belongs' to the exported
-    // constructor
-    constructor: module.exports
  }
