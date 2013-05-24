@@ -103,6 +103,24 @@ im.object().immutable //= true
 im.array().immutable  //= true
 ```
 
+## Value Equality
+
+Collections can be checked for equality:
+
+```javascript
+var person1 = im.object({ name: 'joe bloggs', age: 34 })
+var person2 = im.object({ name: 'joe bloggs', age: 34 })
+var person3 = im.object({ name: 'joe bloggs', age: 34, sport: 'golf' })
+
+person1.equal(person2) //= true
+person3.equal(person2) //= false
+```
+
+Collections are considered equal when:
+
+* They are immutable
+* They have all the same keys
+* All values are strict equal, or .equal to one another
 
 ## Iteration
 

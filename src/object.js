@@ -133,7 +133,7 @@ module.exports.prototype = object.prototype = {
     equal: function(val1){
         var val2 = this
         if ( val1 === val2 ) return true;
-        if ( !(val1 instanceof object) ) return false;
+        if ( !val1 || !val1.immutable ) return false;
 
         var equal = function(v1, v2){
             if ( v1.equal ) return v1.equal(v2)

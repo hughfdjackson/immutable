@@ -282,7 +282,7 @@ describe('im.array', function(){
             a.equal(arr.equal('a'), false)
             a.equal(arr.equal(null), false)
             a.equal(arr.equal(undefined), false)
-            a.equal(arr.equal(im.object()), false)
+
         })
 
         it('should equal itself', function(){
