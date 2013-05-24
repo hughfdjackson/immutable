@@ -17,7 +17,7 @@
     },
     "dependencies": {
         "string-hash": "1.1.0",
-        "persistent-hash-trie": "0.4.0"
+        "persistent-hash-trie": "0.4.1"
     },
     "scripts": {
         "test": "./node_modules/mocha/bin/mocha"

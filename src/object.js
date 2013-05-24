@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var p = require('persistent-hash-trie')
 var util = require('./util')
@@ -69,14 +69,14 @@ var object = function(trie){
         var orig = this
         return p.reduce(trie, function(o, val, key){
             if ( predicate(val, key, orig) === true ) return true
-            else                                      throw new p.reduce.Break(false)
+            else                                      return new p.reduce.Break(false)
         }, true)
     }
 
     this.some = function(predicate){
         var orig = this
         return p.reduce(trie, function(o, val, key){
-            if ( predicate(val, key, orig) === true ) throw new p.reduce.Break(true)
+            if ( predicate(val, key, orig) === true ) return new p.reduce.Break(true)
             else                                      return false
         }, false)
     }
@@ -90,8 +90,8 @@ var object = function(trie){
     }
 
     var separateSeed = function(o){
-        var keyVal = p.reduce(trie, function(key, val){
-            throw p.reduce.Break({ key: key, val: val })
+        var keyVal = p.reduce(trie, function(seed, val, key){
+            return p.reduce.Break({ key: key, val: val })
         })
 
         return {
