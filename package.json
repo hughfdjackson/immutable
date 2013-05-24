@@ -1,48 +1,48 @@
 {
-    "name": "immutable",
-    "description": "efficient immutable data-structures in javascript.",
-    "version": "1.0.0",
-    "main": "src/immutable.js",
-    "keywords": [
-        "immutability",
-        "functional programming",
-        "fp",
-        "persistent datastructures"
+  "name": "immutable",
+  "description": "efficient immutable data-structures in javascript.",
+  "version": "1.1.0",
+  "main": "src/immutable.js",
+  "keywords": [
+    "immutability",
+    "functional programming",
+    "fp",
+    "persistent datastructures"
+  ],
+  "author": "hughfdjackson",
+  "license": "BSD",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hughfdjackson/immutable.git"
+  },
+  "dependencies": {
+    "string-hash": "1.1.0",
+    "persistent-hash-trie": "0.4.1"
+  },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha"
+  },
+  "devDependencies": {
+    "underscore": "*",
+    "mocha": "1.8.1"
+  },
+  "testling": {
+    "files": "test/*-test.js",
+    "browsers": [
+      "iexplore/6.0",
+      "iexplore/7.0",
+      "iexplore/8.0",
+      "iexplore/9.0",
+      "iexplore/10.0",
+      "chrome/4.0",
+      "chrome/23.0",
+      "firefox/3.0",
+      "firefox/17.0",
+      "opera/10.0",
+      "opera/12.0",
+      "safari/5.0.5",
+      "safari/5.1"
     ],
-    "author": "hughfdjackson",
-    "license": "BSD",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/hughfdjackson/immutable.git"
-    },
-    "dependencies": {
-        "string-hash": "1.1.0",
-        "persistent-hash-trie": "0.4.1"
-    },
-    "scripts": {
-        "test": "./node_modules/mocha/bin/mocha"
-    },
-    "devDependencies": {
-        "underscore": "*",
-        "mocha": "1.8.1"
-    },
-    "testling": {
-        "files": "test/*-test.js",
-        "browsers": [
-            "iexplore/6.0",
-            "iexplore/7.0",
-            "iexplore/8.0",
-            "iexplore/9.0",
-            "iexplore/10.0",
-            "chrome/4.0",
-            "chrome/23.0",
-            "firefox/3.0",
-            "firefox/17.0",
-            "opera/10.0",
-            "opera/12.0",
-            "safari/5.0.5",
-            "safari/5.1"
-        ],
-        "harness": "mocha"
-    }
+    "harness": "mocha"
+  }
 }
