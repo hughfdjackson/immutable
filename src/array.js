@@ -146,6 +146,22 @@ module.exports.prototype = array.prototype = {
             if ( this.has(i) ) seed = fn(seed, this.get(i), i.toString(), this)
         }
         return seed
-    }
+    },
 
+    // value equality!
+    equal: function(val1){
+        var val2 = this
+        if ( val1 === val2 ) return true;
+        if ( !(val1 instanceof array) ) return false;
+
+        var equal = function(v1, v2){
+            if ( v1.equal ) return v1.equal(v2)
+            else            return v1 === v2
+        }
+
+        var equal1 = val1.every(function(v, k){ return equal(v, val2.get(k)) })
+        var equal2 = val2.every(function(v, k){ return equal(v, val1.get(k)) })
+
+        return equal1 && equal2
+    }
  }
