@@ -258,4 +258,59 @@ describe('im.object', function(){
             a.equal(obj.reduce(add), 6)
         })
     })
+
+    describe('equal', function(){
+
+        it('should return false if the value is not an immutable object', function(){
+            var obj = im.object()
+
+            a.equal(obj.equal({}), false)
+            a.equal(obj.equal(1), false)
+            a.equal(obj.equal('a'), false)
+            a.equal(obj.equal(null), false)
+            a.equal(obj.equal(undefined), false)
+            a.equal(obj.equal(im.array()), false)
+        })
+
+        it('should equal itself', function(){
+            var obj = im.object()
+
+            a.equal(obj.equal(obj), true)
+        })
+
+        it('should make two empty objects equal', function(){
+            a.equal(im.object().equal(im.object()), true)
+        })
+
+        it('should return false for two structurally different objects', function(){
+            var o1 = im.object({ x: 3 })
+            var o2 = im.object({ y: 3 })
+
+            a.equal(o1.equal(o2), false)
+        })
+
+        it('should return true for two structurally equal objects', function(){
+            var o1 = im.object({ x: 3 })
+            var o2 = im.object({ x: 3 })
+
+            a.equal(o1.equal(o2), true)
+        })
+
+        it('should return false for two different mutable objects as properties', function(){
+            var o1 = im.object({ x: {} })
+            var o2 = im.object({ x: {} })
+
+            a.equal(o1.equal(o2), false)
+        })
+
+        it('should recurse with equal', function(){
+            var val1 = im.object({ x: 1 })
+            var val2 = im.object({ x: 1 })
+
+            var o1 = im.object({ x: val1 })
+            var o2 = im.object({ x: val2 })
+
+            a.equal(o1.equal(o2), true)
+        })
+    })
 })
