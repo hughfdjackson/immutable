@@ -321,5 +321,13 @@ describe('im.object', function(){
 
             a.equal(imO1.equal(imO2), false)
         })
+
+        it('should return false if there are an unequal number of properties', function(){
+            var o1 = im.object({ x: 1, y: 2 })
+            var o2 = im.object({ x: 1 })
+
+            a.equal(o1.equal(o2), false)
+            a.equal(o2.equal(o1), false)
+        })
     })
 })

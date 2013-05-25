@@ -300,6 +300,7 @@ describe('im.array', function(){
             var a2 = im.array([1, 2, 3, 4])
 
             a.equal(a1.equal(a2), false)
+            a.equal(a2.equal(a1), false)
         })
 
         it('should return true for two structurally equal objects', function(){
