@@ -296,34 +296,43 @@ describe('im.array', function(){
         })
 
         it('should return false for two structurally different objects', function(){
-            var o1 = im.array([1, 2, 3])
-            var o2 = im.array([1, 2, 3, 4])
+            var a1 = im.array([1, 2, 3])
+            var a2 = im.array([1, 2, 3, 4])
 
-            a.equal(o1.equal(o2), false)
+            a.equal(a1.equal(a2), false)
         })
 
         it('should return true for two structurally equal objects', function(){
-            var o1 = im.array([1, 2, 3, 4])
-            var o2 = im.array([1, 2, 3, 4])
+            var a1 = im.array([1, 2, 3, 4])
+            var a2 = im.array([1, 2, 3, 4])
 
-            a.equal(o1.equal(o2), true)
+            a.equal(a1.equal(a2), true)
         })
 
         it('should return false for two different mutable objects as properties', function(){
-            var o1 = im.array([{}])
-            var o2 = im.array([{}])
+            var a1 = im.array([{}])
+            var a2 = im.array([{}])
 
-            a.equal(o1.equal(o2), false)
+            a.equal(a1.equal(a2), false)
         })
 
         it('should recurse with equal', function(){
             var val1 = im.object({ x: 1 })
             var val2 = im.object({ x: 1 })
 
-            var o1 = im.array([val1])
-            var o2 = im.array([val2])
+            var a1 = im.array([val1])
+            var a2 = im.array([val2])
 
-            a.equal(o1.equal(o2), true)
+            a.equal(a1.equal(a2), true)
+        })
+    })
+
+    describe('push', function(){
+        it('should add on a new array member at the end', function(){
+            var arr1 = im.array([1, 2, 3])
+            var arr2 = arr1.push(4)
+
+            a.deepEqual(arr2.mutable(), [1, 2, 3, 4])
         })
     })
 })

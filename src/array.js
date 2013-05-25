@@ -137,6 +137,7 @@ module.exports.prototype = array.prototype = {
         return seed
     },
 
+    // array-specific methods
     reduceRight: function(fn, seed){
         if ( arguments.length === 1 ) {
             var member = lastMember(this)
@@ -149,6 +150,11 @@ module.exports.prototype = array.prototype = {
         return seed
     },
 
+    push: function(v){
+        return this.assoc(this.length, v)
+    },
+
     // value equality!
-    equal: object.prototype.equal
+    equal: object.prototype.equal,
+
 }

@@ -208,12 +208,23 @@ var letters = im.array(['a', 'b', 'c'])
 letters.reduce(cat)  //= 'abc'
 ```
 
-### .reduceRight
+## Array Methods
 
-*array only*
+From their lofty position as having order, arrays have some methods all of their own.
+
+### .reduceRight
 
 ```javascript
 var cat = function(a, b){ return a + b }
 var letters = im.array(['a', 'b', 'c'])
 letters.reduceRight(cat)  //= 'cba'
+```
+
+### .push
+
+```javascript
+var numbersTo3 = im.array([1, 2, 3])
+var numbersTo4 = numbersTo3.push(4)
+
+numbersTo4.mutable() //= [1, 2, 3, 4]
 ```
