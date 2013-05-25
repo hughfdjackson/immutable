@@ -358,5 +358,13 @@ describe('im.array', function(){
 
             a.equal(arr.indexOf('a'), -1)
         })
+
+        it('should return the first index', function(){
+            var arr = im.array([1, 1, 2, 2, 3, 3])
+
+            a.equal(arr.indexOf(1), 0)
+            a.equal(arr.indexOf(2), 2)
+            a.equal(arr.indexOf(3), 4)
+        })
     })
 })

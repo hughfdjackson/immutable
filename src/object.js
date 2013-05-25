@@ -135,7 +135,6 @@ module.exports.prototype = object.prototype = {
         if ( val1 === val2 ) return true;
         if ( !val1 || !val1.immutable ) return false;
 
-
         var equal1 = val1.every(function(v, k){ return util.areEqual(v, val2.get(k)) })
         var equal2 = val2.every(function(v, k){ return util.areEqual(v, val1.get(k)) })
 
