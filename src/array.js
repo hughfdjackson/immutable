@@ -154,7 +154,10 @@ module.exports.prototype = array.prototype = {
         return this.assoc(this.length, v)
     },
 
-    // value equality!
+    indexOf: function(v){
+        var useEqual = v && v.immutable && typeof v.equal === 'function'
+    },
+
     equal: object.prototype.equal,
 
 }

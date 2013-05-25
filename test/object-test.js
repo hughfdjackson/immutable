@@ -311,5 +311,15 @@ describe('im.object', function(){
 
             a.equal(o1.equal(o2), true)
         })
+
+        it('shouldn\'t call equal on a non-immutable object', function(){
+            var o1 = { equal: function(){ return true } }
+            var o2 = { equal: function(){ return true } }
+
+            var imO1 = im.object({ x: o1 })
+            var imO2 = im.object({ x: o2 })
+
+            a.equal(imO1.equal(imO2), false)
+        })
     })
 })
