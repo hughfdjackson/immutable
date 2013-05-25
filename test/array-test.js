@@ -336,27 +336,27 @@ describe('im.array', function(){
         })
     })
 
-    // describe('indexOf', function(){
-    //     it('should return the indexOf an element found with .equal', function(){
-    //         var arr1 = im.array([1, 2, 3, im.object({ x: 3 })])
-    //         var obj = im.object({ x: 3 })
+    describe('indexOf', function(){
+        it('should return the indexOf an element found with .equal', function(){
+            var arr1 = im.array([1, 2, 3, im.object({ x: 3 })])
+            var obj = im.object({ x: 3 })
 
-    //         a.equal(arr1.indexOf(obj), 3)
-    //     })
+            a.equal(arr1.indexOf(obj), 3)
+        })
 
-    //     it('should return the indexOf an element with ===', function(){
-    //         var arr = im.array([1, 2, 3, 4])
+        it('should return the indexOf an element with ===', function(){
+            var arr = im.array([1, 2, 3, 4])
 
-    //         a.equal(arr.indexOf(1), 0)
-    //         a.equal(arr.indexOf(2), 1)
-    //         a.equal(arr.indexOf(3), 2)
-    //         a.equal(arr.indexOf(4), 3)
-    //     })
+            a.equal(arr.indexOf(1), 0)
+            a.equal(arr.indexOf(2), 1)
+            a.equal(arr.indexOf(3), 2)
+            a.equal(arr.indexOf(4), 3)
+        })
 
-    //     it('should return -1 for not found (ugh - it is standard though)', function(){
-    //         var arr = im.array([1, 2, 3, 4])
+        it('should return -1 for not found (ugh - it is standard though)', function(){
+            var arr = im.array([1, 2, 3, 4])
 
-    //         a.equal(arr.indexOf('a'), -1)
-    //     })
-    // })
+            a.equal(arr.indexOf('a'), -1)
+        })
+    })
 })

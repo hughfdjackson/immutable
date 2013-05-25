@@ -155,7 +155,10 @@ module.exports.prototype = array.prototype = {
     },
 
     indexOf: function(v){
-        var useEqual = v && v.immutable && typeof v.equal === 'function'
+        for ( var i = 0, len = this.length; i < len; i += 1 ) {
+            if ( this.has(i) && util.areEqual(v, this.get(i)) )  return i
+        }
+        return -1
     },
 
     equal: object.prototype.equal,
