@@ -161,6 +161,5 @@ module.exports.prototype = array.prototype = {
         return -1
     },
 
-    equal: object.prototype.equal,
-
+    equal: object.prototype.equal
 }

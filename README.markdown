@@ -228,3 +228,17 @@ var numbersTo4 = numbersTo3.push(4)
 
 numbersTo4.mutable() //= [1, 2, 3, 4]
 ```
+
+### .indexOf
+
+```javascript
+var mixed = im.array([1, 2, 3, im.object({ x: 3 }), { x: 3 }])
+mixed.indexOf('a')      //= -1 -- 'a' not in array
+mixed.indexOf({ x: 3 }) //= -1 -- mutable objects are compared by reference
+mixed.indexOf(im.object({ x: 3 })) //= 3 -- immutable objects are compared by value
+mixed.indexOf(3) //= 2 -- primitives are compared by value
+```
+
+### .lastIndexOf
+
+
