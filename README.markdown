@@ -238,7 +238,3 @@ mixed.indexOf({ x: 3 }) //= -1 -- mutable objects are compared by reference
 mixed.indexOf(im.object({ x: 3 })) //= 3 -- immutable objects are compared by value
 mixed.indexOf(3) //= 2 -- primitives are compared by value
 ```
-
-### .lastIndexOf
-
-
