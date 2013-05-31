@@ -21,7 +21,7 @@
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha",
-    "prepublish": "./node_modules/browserify/bin/cmd.js --standalone immutable -e src/immutable.js | ./node_modules/uglify-js/bin/uglifyjs > builds/immutable.js"
+    "prepublish": "./node_modules/browserify/bin/cmd.js --standalone immutable -e src/immutable.js | ./node_modules/uglify-js/bin/uglifyjs > build/immutable.js"
   },
   "devDependencies": {
     "underscore": "*",

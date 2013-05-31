@@ -10,7 +10,25 @@ Using immutable objects can make code easier to reason about, by eliminating a c
 
 # Install
 
-`npm install immutable`
+### npm
+
+```bash
+npm install delve
+```
+
+### browser
+
+Download build/immutable.js, and include it as a script tag.
+
+### AMD/require.js
+
+Download build/immutable.js, and require it in:
+
+```javascript
+require(['libs/immutable'], function(immutable){
+  // ... assuming immutable is in libs/immutable.js, now it's ready to use
+})
+```
 
 # Usage
 
