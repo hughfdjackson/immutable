@@ -13,7 +13,7 @@ Using immutable objects can make code easier to reason about, by eliminating a c
 ### npm
 
 ```bash
-npm install delve
+npm install immutable
 ```
 
 ### browser
