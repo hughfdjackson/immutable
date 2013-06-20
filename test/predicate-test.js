@@ -30,4 +30,3 @@ describe('isImmutable', function(){
         a.equal(isImmutable(true), false)
     })
 })
-

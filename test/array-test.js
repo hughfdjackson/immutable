@@ -48,7 +48,7 @@ describe('im.array', function(){
 		})
 	})
 
-	describe('length', function(){
+	describe('.length', function(){
 		it('should get updated to be the largest int + 1', function(){
 			var arr1 = im.array([1, 2, 3])
 			a.equal(arr1.length, 3)
@@ -112,7 +112,7 @@ describe('im.array', function(){
         })
     })
 
-    describe('forEach', function(){
+    describe('.forEach', function(){
         it('should pass val, key, array, but return nothing', function(){
             var results = []
             var details = function(val, key, array){
@@ -132,7 +132,7 @@ describe('im.array', function(){
     })
 
 
-    describe('every', function(){
+    describe('.every', function(){
         var isOdd = function(n){ return n % 2 !== 0 }
 
         it('should return false if the predicate does once', function(){
@@ -163,7 +163,7 @@ describe('im.array', function(){
         })
     })
 
-    describe('some', function(){
+    describe('.some', function(){
         var isOdd = function(n){ return n % 2 !== 0 }
 
         it('should return true if the predicate does once', function(){
@@ -195,7 +195,7 @@ describe('im.array', function(){
     })
 
 
-    describe('filter', function(){
+    describe('.filter', function(){
         var isOdd = function(n){ return n % 2 !== 0 }
 
         it('should filter a collection', function(){
@@ -220,7 +220,7 @@ describe('im.array', function(){
         })
     })
 
-    describe('reduce', function(){
+    describe('.reduce', function(){
 
         it('should reduce over collection in left to right order', function(){
 
@@ -246,7 +246,7 @@ describe('im.array', function(){
         })
     })
 
-    describe('reduceRight', function(){
+    describe('.reduceRight', function(){
 
         it('should reduce over collection in right to left order', function(){
 
@@ -272,7 +272,7 @@ describe('im.array', function(){
         })
     })
 
-    describe('equal', function(){
+    describe('.equal', function(){
 
         it('should return false if the value is not an immutable object', function(){
             var arr = im.array()
@@ -328,7 +328,7 @@ describe('im.array', function(){
         })
     })
 
-    describe('push', function(){
+    describe('.push', function(){
         it('should add on a new array member at the end', function(){
             var arr1 = im.array([1, 2, 3])
             var arr2 = arr1.push(4)
@@ -337,7 +337,7 @@ describe('im.array', function(){
         })
     })
 
-    describe('indexOf', function(){
+    describe('.indexOf', function(){
         it('should return the indexOf an element found with .equal', function(){
             var arr1 = im.array([1, 2, 3, im.object({ x: 3 })])
             var obj = im.object({ x: 3 })

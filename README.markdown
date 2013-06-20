@@ -6,7 +6,9 @@ Effecient immutable collections in javascript.
 
 ## Why?
 
-Using immutable objects can make code easier to reason about, by eliminating a class of difficult-to-find side-effects that can (and do) trip programmers up.
+Using immutable objects can make code easier to reason about, allowing programmers to geniunely create sections of their programs that operate on a 'data-in/data-out' basis.
+
+This style of code is easy to test, and use in a mix-and-match style.
 
 # Install
 
@@ -48,11 +50,11 @@ var numbers = im.array([1, 2, 3, 4, 5])
 ```javascript
 var emptyObj = im.object()
 var person = emptyObj.assoc({ name: 'joe bloggs', age: 34 })
-var personWithSports = o.assoc('sport', 'golf')
+var personWithSports = person.assoc('sport', 'golf')
 
 var emptyArr = im.array()
 var numbers = emptyArr.assoc([1, 2, 3, 4, 5])
-var upTo6 = emptyArr.assoc(5, 6)
+var upTo6 = numbers.assoc(5, 6)
 ```
 
 ### .get
@@ -85,9 +87,10 @@ var personShyAboutAge = person.dissoc('age')
 personShyAboutAge.has('age') //= false
 
 var numbers = im.array([1, 2, 3, 4, 5])
-var upTo4 = numbers.dissoc(4)
+var upTo4 = numbers.dissoc(4) // dissocs the 4th key
 
-numbers.has(4) //= false
+numbers.has(4) //= true
+upTo4.has(4)   //= false
 ```
 
 ### .mutable / .toJSON
@@ -95,7 +98,6 @@ numbers.has(4) //= false
 Create a regular JavaScript object from an immutable one:
 
 ```javascript
-
 var person = im.object({ name: 'joe bloggs', age: 34 })
 person.mutable() //= { name: 'joe bloggs', age: 34 }
 ```
@@ -107,18 +109,7 @@ var favouritePeople = {
 	joe: im.object({ name: 'joe bloggs', age: 34, sports: im.array(['golf', 'carting']) })
 }
 
-var data = JSON.stringify(favouritePeople)
-
-data // = '{ "joe": { "name": "joe bloggs", "age": 34, "sports": ["golf", "carting"] } }'
-```
-
-### .immutable
-
-`.immutable` is a simple boolean flag, which is set to `true` on all immutable objects, for easy, consistent querying:
-
-```javascript
-im.object().immutable //= true
-im.array().immutable  //= true
+JSON.stringify(favouritePeople) // = '{ "joe": { "name": "joe bloggs", "age": 34, "sports": ["golf", "carting"] } }'
 ```
 
 ## Value Equality
@@ -138,15 +129,17 @@ Collections are considered equal when:
 
 * They are immutable
 * They have all the same keys
-* All values are strict equal, or .equal to one another
+* All values are:
+** Mutable objects or primtive values that are strictly equal (===),
+** Immutable objects that are .equal to one another
 
-## Iteration
+## Iteration methods
 
 Immutable objects and arrays can be iterated over almost identically, except that:
 * objects iterate over *all* keys, and return objects where appropriate;
 * arrays iterate over *only numberic* keys, and return arrays where appropriate.
 
-All iterator functions (unless mentioned) well pass the value, the key, and the original immutable object to their callback functions.
+All iterator methods (unless mentioned) will pass the value, the key, and the original immutable object to their callback functions.
 
 ### .map
 
@@ -154,10 +147,10 @@ All iterator functions (unless mentioned) well pass the value, the key, and the 
 var inc = function(a){ return a + 1 }
 
 var coordinates = im.object({ x: 1, y: 1 })
-coordinates.map(inc).mutable() // { x: 1, y: 1 }
+coordinates.map(inc).mutable() //= { x: 2, y: 3 }
 
 var numbers = im.array([1, 2, 3, 4, 5])
-numbers.map(inc).mutable() // [2, 3, 4, 5, 6]
+numbers.map(inc).mutable() //= [2, 3, 4, 5, 6]
 ```
 
 ### .forEach
@@ -189,12 +182,11 @@ alphaNumber.filter(isNum).mutable() //= [1, 2, 3]
 ```javascript
 var isNum = function(a){ return typeof a === 'number' }
 
-var person = im.object({ name: 'joe bloggs', age: 34 })
-person.every(isNum) //= false
+im.object({ name: 'joe bloggs', age: 34 }).every(isNum) //= false
+im.object({ x: 1, y: 2 }).every(isNum) //= true
 
-var alphaNumber = im.array(['a', 1, 'b', 2, 'c', 3])
-alphaNumber.every(isNum) //= false
-
+im.array(['a', 1, 'b', 2, 'c', 3]).every(isNum) //= false
+im.array([1, 2, 3]).every(isNum) //= true
 ```
 
 ### .some
@@ -202,12 +194,11 @@ alphaNumber.every(isNum) //= false
 ```javascript
 var isNum = function(a){ return typeof a === 'number' }
 
-var person = im.object({ name: 'joe bloggs', age: 34 })
-person.some(isNum) //= true
+im.object({ name: 'joe bloggs', sport: 'golf' }).some(isNum) //= false
+im.object({ name: 'joe bloggs', age: 34 }).some(isNum) //= true
 
-var alphaNumber = im.array(['a', 1, 'b', 2, 'c', 3])
-alphaNumber.some(isNum) //= true
-
+im.array(['a', 'b', 'c']).some(isNum) //= false
+im.array(['a', 1, 'b', 2, 'c', 3]).every(isNum) //= true
 ```
 
 ### .reduce
@@ -217,9 +208,9 @@ var flip = function(coll, val, key){
 	return coll.assoc(key, val)
 }
 
-var person = im.object({ x: '1', y: '2', z: '3' })
-var flippedPerson = person.reduce(flip, im.object())
-flippedPerson.mutable() //= { 1: 'x', 2: 'y', 3: 'z' }
+var coords = im.object({ x: '1', y: '2', z: '3' })
+var flippedCoords = coords.reduce(flip, im.object())
+flippedCoords.mutable() //= { 1: 'x', 2: 'y', 3: 'z' }
 
 var cat = function(a, b){ return a + b }
 var letters = im.array(['a', 'b', 'c'])
@@ -228,7 +219,7 @@ letters.reduce(cat)  //= 'abc'
 
 ## Array Methods
 
-From their lofty position as having order, arrays have some methods all of their own.
+Since arrays are *ordered* collections, they have some methods of their own, that only make sense in an ordered context:
 
 ### .reduceRight
 
@@ -255,4 +246,15 @@ mixed.indexOf('a')      //= -1 -- 'a' not in array
 mixed.indexOf({ x: 3 }) //= -1 -- mutable objects are compared by reference
 mixed.indexOf(im.object({ x: 3 })) //= 3 -- immutable objects are compared by value
 mixed.indexOf(3) //= 2 -- primitives are compared by value
+```
+
+## Library Functions
+
+## .isImmutableCollection
+
+A predicate that returns true if the object is an immutable one, such as produced by this library.
+
+```javascript
+im.isImmutableCollection(im.array([1, 2, 3])) //= true
+im.isImmutableCollection(Object.freeze({}))   //= false - you couldn't assoc/dissoc/get/set on it
 ```

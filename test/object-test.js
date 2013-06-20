@@ -126,7 +126,7 @@ describe('im.object', function(){
         })
     })
 
-    describe('forEach', function(){
+    describe('.forEach', function(){
         it('should pass val, key, object, but return nothing', function(){
             var results = {}
             var details = function(val, key, object){
@@ -145,7 +145,7 @@ describe('im.object', function(){
         })
     })
 
-    describe('every', function(){
+    describe('.every', function(){
         var isOdd = function(n){ return n % 2 !== 0 }
 
         it('should return false if the predicate does once', function(){
@@ -176,7 +176,7 @@ describe('im.object', function(){
         })
     })
 
-    describe('some', function(){
+    describe('.some', function(){
         var isOdd = function(n){ return n % 2 !== 0 }
 
         it('should return true if the predicate does once', function(){
@@ -207,7 +207,7 @@ describe('im.object', function(){
         })
     })
 
-    describe('filter', function(){
+    describe('.filter', function(){
         var isOdd = function(n){ return n % 2 !== 0 }
 
         it('should filter a collection', function(){
@@ -232,7 +232,7 @@ describe('im.object', function(){
         })
     })
 
-    describe('reduce', function(){
+    describe('.reduce', function(){
 
         it('should reduce over collection in any order', function(){
 
@@ -259,7 +259,7 @@ describe('im.object', function(){
         })
     })
 
-    describe('equal', function(){
+    describe('.equal', function(){
 
         it('should return false if the value is not an immutable object', function(){
             var obj = im.object()

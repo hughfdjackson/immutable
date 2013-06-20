@@ -5,6 +5,6 @@ describe('immutable', function(){
 	it('should export API', function(){
 		a.equal(im.object, require('../src/object'))
 		a.equal(im.array, require('../src/array'))
-        a.equal(im.isImmutable, require('../src/predicate'))
+        a.equal(im.isImmutableCollection, require('../src/predicate'))
 	})
 })
