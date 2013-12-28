@@ -31,7 +31,17 @@ var areEqual = function(v1, v2){
     else return v1 === v2
 }
 
+var range = function(start, end) {
+    if (end - start < 0) return undefined; 
+    var list = [];
+    for (var i = start; i <= end; i++) {
+        list.push(i);
+    }
+    return list;
+}
+
 module.exports = {
+    range     : range,
     extend    : extend,
     clone     : clone,
     slice     : slice,
