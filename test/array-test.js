@@ -92,6 +92,38 @@ describe('im.array', function(){
 		})
 	})
 
+    describe('.slice', function(){
+        it('should create an immutable array slice', function(){
+            var arr = im.array([1,2,3,4,5,6]);
+            a.deepEqual(arr.slice(2,3).mutable(), [3]);
+            arr = im.array([1,2,3,4,5,6]);
+            a.deepEqual(arr.slice(0,4).mutable(), [1,2,3,4]);
+            a.deepEqual(arr.slice(-1,7).mutable(), [1,2,3,4,5] );
+        })
+    })
+
+     describe('.concat', function(){
+        it('should append one immutable array to another', function(){
+            var arr = im.array([1,2,3,4,5,6]).concat(im.array([7,8]));
+            a.deepEqual(arr.mutable(), [1,2,3,4,5,6,7,8]);
+            var arr = im.array([1,2,3,4,5,6]).concat([7,8]);
+            a.deepEqual(arr.mutable(), [1,2,3,4,5,6,7,8]);
+        })
+    })
+
+      describe('.flatMap', function(){
+        it('should flatten immutable arrays', function(){
+            var arr = im.array([1,2,3,4,5,[6,7]]).flatMap(function(n){return n});
+            a.deepEqual(arr.mutable(), [6,7]);
+            arr = im.array([[1,2,3,4,5],[6,7]]).flatMap(function(n){return n});
+            a.deepEqual(arr.mutable(), [1,2,3,4,5,6,7]);
+            arr = (im.array([1,2,3,4,5,6]).concat([7,8])).flatMap(function(n){return n});
+            a.deepEqual(arr.mutable(), []);
+            var h = im.array().push(im.array([1]).concat(im.array([2])));
+            arr = h.flatMap(function(n){return n});
+            a.deepEqual(arr.mutable(), [1,2]);
+        })
+    }) 
 	describe('.map', function(){
         it('should create an immutable object with updated values', function(){
             var inc = function(a){ return a + 1 }

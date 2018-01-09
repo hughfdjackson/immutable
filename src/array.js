@@ -137,6 +137,36 @@ module.exports.prototype = array.prototype = {
         return seed
     },
 
+    slice: function(start, end) {
+        var lowEnd = start < 0 ? 0 : start;
+        var highEnd =  end > this.length - 1 ? this.length - 1 : end;
+        var arr = (new array()).assoc(util.range(lowEnd,highEnd - 1));
+        var ref = this;
+        return arr.map(function (e) {return ref.get(e)});
+    },
+
+    concat: function(arr) {
+        var details = function(seed, val, key, array){
+              return seed.push(val);
+        }
+        var additional = Array.isArray(arr) ? (new array()).assoc(arr) : arr;
+        if ((additional).mutable == undefined || Array.isArray(additional.mutable()) == false) {
+            return this;
+        } 
+
+        return additional.reduce(details, this);
+    },
+
+    flatMap: function(fn) {
+        var details = function(seed, val, key, array){
+            if ( Array.isArray(val) || ((val).mutable != undefined && Array.isArray(val.mutable())) ) {
+              return seed.concat(val.map(fn));
+            } else return seed;
+            
+        };
+        return this.reduce(details, new array());
+    },
+
     // array-specific methods
     reduceRight: function(fn, seed){
         if ( arguments.length === 1 ) {
